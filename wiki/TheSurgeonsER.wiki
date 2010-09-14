@@ -1,0 +1,40 @@
+#summary Todo list for Zircean.
+
+= Introduction =
+
+I'm doing this because I have ADD and I'm constantly changing what I'm focusing on. This is most unfortunate. Since I'm a resident codemonkey, feel free to add things to this page for me to complete. However, please remember to put them in the correct list.
+
+= Details =
+
+== Features for the upcoming version ==
+
+  * Enhancements to the NetServer
+    * GUI
+    * Banlist and admin ban controls (currently operating)
+    * Message of the day / global announce
+    * Kitaru listed some more, I need to go ask him what they were or dive into my IRC logs
+  * Other enhancements to Netplay
+    * Customizable garbage tables
+    * Netplay type presets (i.e., NullpoMino, Blockbox, TOJ, etc)
+    * Not so important, but the "targeting" system found in guideline games (for completeness, not because it's useful)
+
+== Features for future versions ==
+
+  * MISSION MANIA and HANABI ATTACK modes
+  * Rework GEM MANIA to move more information from hardcoding to the map definitions, such as number of normal and EX stages, etc.
+  * Moving more modes to netplay
+  * AVALANCHE, PHYSICIAN, SPF-type VS on netplay and the ability to select more VS modes
+    * Different room setup options depending on the mode (this will be a doozy)
+
+== Long-term projects ==
+
+  * Widget engine for the UI
+  * Implementation of PetitPrince's UI or similar, whatever is decided upon by then.
+
+= The future of NullpoMino =
+
+In all, I think the best way to move forward now is to make the UI more user-friendly such that people who are new to the scene will be able to move through it relatively pain-free. Right now, the major complaint against NullpoMino is not the lack of features, as it is the most feature-complete of any clone out there right now, but the fact that people don't really know what they're doing. A NullpoMino Guide has combated this somewhat, but the problem still remains that there are a lot of options that go unused and this is unnecessary.
+
+To this end, I'd started the discussion on UI updates for NullpoMino, and I hope we can roll out and entirely new and much more intuitive interface by NM8.
+
+I'd also like to focus on making things more modular in general, in order to solve problems like the speed curve import problem (see KitaruAndTheToDoList).
