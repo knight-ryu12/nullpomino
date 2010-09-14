@@ -8,14 +8,14 @@ I'm doing this because I have ADD and I'm constantly changing what I'm focusing 
 
 == Features for the upcoming version ==
 
-  * Enhancements to the NetServer
+  * Enhancements to the !NetServer
     * GUI
     * Banlist and admin ban controls (currently operating)
     * Message of the day / global announce
     * Kitaru listed some more, I need to go ask him what they were or dive into my IRC logs
   * Other enhancements to Netplay
     * Customizable garbage tables
-    * Netplay type presets (i.e., NullpoMino, Blockbox, TOJ, etc)
+    * Netplay type presets (i.e., !NullpoMino, Blockbox, TOJ, etc)
     * Not so important, but the "targeting" system found in guideline games (for completeness, not because it's useful)
 
 == Features for future versions ==
@@ -29,12 +29,12 @@ I'm doing this because I have ADD and I'm constantly changing what I'm focusing 
 == Long-term projects ==
 
   * Widget engine for the UI
-  * Implementation of PetitPrince's UI or similar, whatever is decided upon by then.
+  * Implementation of !PetitPrince's UI or similar, whatever is decided upon by then.
 
-= The future of NullpoMino =
+= The future of !NullpoMino =
 
-In all, I think the best way to move forward now is to make the UI more user-friendly such that people who are new to the scene will be able to move through it relatively pain-free. Right now, the major complaint against NullpoMino is not the lack of features, as it is the most feature-complete of any clone out there right now, but the fact that people don't really know what they're doing. A NullpoMino Guide has combated this somewhat, but the problem still remains that there are a lot of options that go unused and this is unnecessary.
+In all, I think the best way to move forward now is to make the UI more user-friendly such that people who are new to the scene will be able to move through it relatively pain-free. Right now, the major complaint against !NullpoMino is not the lack of features, as it is the most feature-complete of any clone out there right now, but the fact that people don't really know what they're doing. A !NullpoMino Guide has combated this somewhat, but the problem still remains that there are a lot of options that go unused and this is unnecessary.
 
-To this end, I'd started the discussion on UI updates for NullpoMino, and I hope we can roll out and entirely new and much more intuitive interface by NM8.
+To this end, I'd started the discussion on UI updates for !NullpoMino, and I hope we can roll out and entirely new and much more intuitive interface by NM8.
 
 I'd also like to focus on making things more modular in general, in order to solve problems like the speed curve import problem (see KitaruAndTheToDoList).
