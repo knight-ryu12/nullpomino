@@ -21,6 +21,9 @@ User request list:
 
 My list:
   * TGM garbage
+    * Field will store copy of rows cleared in the last line clear action.
+    * BLOCK_ATTRIBUTE_LAST_COMMIT (tentative name) will mark blocks that were committed to the field on the last lockdown or cascade.
+    * Function that generates TGM garbage rows will remove the blocks committed that caused the line clear.
   * adjustable garbage tables, hidden away in some Advanced tab
   * a similar Advanced menu for things like scoring behaviors in Score Race and Ultra?
   * eventually, speed curve import for Netplay Versus -- say, for things like Shirase Versus with TGM level up, NES Versus with its own speed curve and level up system, etc.
