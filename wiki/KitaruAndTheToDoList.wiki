@@ -31,7 +31,7 @@ My list:
   * varying garbage behaviors depending on type of clear (i.e. random on normals, TGM garbage on twists, etc.)
   * "Pressure" garbage -- a subsection of the garbage meter that is added gradually
   * quick rotation rule change menu for Netplay etc.
-  * Zero ARE, Line ARE, and Line Clear in multiplayer, Line Race, etc. by default.
+  * ~~Zero ARE, Line ARE, and Line Clear in multiplayer, Line Race, etc. by default.~~
   * rule system overhaul -- see below
   * gametype tags for rules -- Some rules should be prevented from displaying in inappropriate menus. We don't really need to see Avalanche rules in the Tetromino menu.
 
