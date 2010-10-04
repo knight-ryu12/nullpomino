@@ -9,7 +9,7 @@ I figured I should compile a running list of stuff I wanted to work on or though
 
 User request list:
   * attack/line ratio on the stats page
-  * make Fractional Garbage in 3P+ default
+  * ~~make Fractional Garbage in 3P+ default~~ (Current default: Reduced)
   * option to swap roles of Up/Down without reconfiguring controls or tuning a .rul file
   * themes
   * higher resolutions for windowed mode
@@ -21,8 +21,8 @@ User request list:
 
 My list:
   * TGM garbage
-    * Field will store copy of rows cleared in the last line clear action.
-    * BLOCK_ATTRIBUTE_LAST_COMMIT (tentative name) will mark blocks that were committed to the field on the last lockdown or cascade.
+    * ~~Field will store copy of rows cleared in the last line clear action.~~
+    * ~~BLOCK_ATTRIBUTE_LAST_COMMIT (tentative name) will mark blocks that were committed to the field on the last lockdown or cascade.~~
     * Function that generates TGM garbage rows will remove the blocks committed that caused the line clear.
   * adjustable garbage tables, hidden away in some Advanced tab
   * a similar Advanced menu for things like scoring behaviors in Score Race and Ultra?
@@ -33,7 +33,7 @@ My list:
   * quick rotation rule change menu for Netplay etc.
   * ~~Zero ARE, Line ARE, and Line Clear in multiplayer, Line Race, etc. by default.~~
   * rule system overhaul -- see below
-  * gametype tags for rules -- Some rules should be prevented from displaying in inappropriate menus. We don't really need to see Avalanche rules in the Tetromino menu.
+  * ~~gametype tags for rules -- Some rules should be prevented from displaying in inappropriate menus. We don't really need to see Avalanche rules in the Tetromino menu.~~ (Thanks NoName)
 
 = My Thoughts on the Rule System =
 
