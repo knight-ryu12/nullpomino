@@ -23,7 +23,13 @@ My list:
   * TGM garbage
     * ~~Field will store copy of rows cleared in the last line clear action.~~
     * ~~BLOCK_ATTRIBUTE_LAST_COMMIT (tentative name) will mark blocks that were committed to the field on the last lockdown or cascade.~~
-    * Function that generates TGM garbage rows will remove the blocks committed that caused the line clear.
+    * ~~Function that generates TGM garbage rows will remove the blocks committed that caused the line clear.~~
+    * Pending garbage storage in Field.
+      * Integration of other garbage types into pending garbage field.
+        * Methods to queue, counter and add pending garbage rows to the field.
+      * Option to display pending garbage below the field (as in TGM3 etc.)
+    * Netmessage send/receive modifications to support new garbage functions.
+      * Use rowToString() on TGM garbage rows and send them across?
   * adjustable garbage tables, hidden away in some Advanced tab
   * a similar Advanced menu for things like scoring behaviors in Score Race and Ultra?
   * eventually, speed curve import for Netplay Versus -- say, for things like Shirase Versus with TGM level up, NES Versus with its own speed curve and level up system, etc.
