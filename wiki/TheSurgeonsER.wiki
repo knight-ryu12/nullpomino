@@ -9,15 +9,16 @@ I'm doing this because I have ADD and I'm constantly changing what I'm focusing 
 == Features for the upcoming version ==
 
   * Enhancements to the !NetServer
-    * GUI
-    * Banlist and admin ban controls (currently operating)
-    * Message of the day / global announce
+    * ~~GUI~~ Solved: !NetAdmin tool
+    * ~~Banlist and admin ban controls~~ Should be working, needs testing
+    * Message of the day / ~~global announce~~
     * Force room deletion
     * Kitaru listed some more, I need to go ask him what they were or dive into my IRC logs
   * Other enhancements to Netplay
     * Customizable garbage tables
     * Netplay type presets (i.e., !NullpoMino, Blockbox, TOJ, etc)
     * Not so important, but the "targeting" system found in guideline games (for completeness, not because it's useful)
+  * Accounts and password storing
 
 == Features for future versions ==
 
