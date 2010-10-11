@@ -39,7 +39,7 @@ My list:
   * quick rotation rule change menu for Netplay etc.
   * ~~Zero ARE, Line ARE, and Line Clear in multiplayer, Line Race, etc. by default.~~
   * rule system overhaul -- see below
-  * ~~gametype tags for rules -- Some rules should be prevented from displaying in inappropriate menus. We don't really need to see Avalanche rules in the Tetromino menu.~~ (Thanks NoName)
+  * ~~gametype tags for rules -- Some rules should be prevented from displaying in inappropriate menus. We don't really need to see Avalanche rules in the Tetromino menu.~~ (Thanks NoName.)
 
 = My Thoughts on the Rule System =
 
@@ -47,7 +47,7 @@ I don't think rules should be in charge of as many things as they are. That some
 
 In light of the above, I also feel I should bring up the point that some modes should probably have a flag that prevents overrides by default. For example, Retro Marathon should ignore DAS adjustments unless you are in a special Custom mode -- more on that in just a moment.
 
-I believe that some single player modes should have officially supported rules. Modes that attempt to clone a particular mode should have options to use the intended rule, as well as a Custom option to use the selected rule instead. (i.e. Grade Mania 3's rule menu would sport Classic3, Standard-Hard, and Custom.)
+~~I believe that some single player modes should have officially supported rules. Modes that attempt to clone a particular mode should have options to use the intended rule, as well as a Custom option to use the selected rule instead. (i.e. Grade Mania 3's rule menu would sport Classic3, Standard-Hard, and Custom.)~~ (Thanks NoName.)
 
 It may also be beneficial to allow for separate default configurations with each rule. For example, Classic and Standard rules should have their appropriate torikans by default rather than share one setting.
 
