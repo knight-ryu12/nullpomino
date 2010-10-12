@@ -10,7 +10,7 @@ I figured I should compile a running list of stuff I wanted to work on or though
 User request list:
   * attack/line ratio on the stats page
   * ~~make Fractional Garbage in 3P+ default~~ (Current default: Reduced)
-  * option to swap roles of Up/Down without reconfiguring controls or tuning a .rul file
+  * ~~option to swap roles of Up/Down without reconfiguring controls or tuning a .rul file~~
   * themes
   * higher resolutions for windowed mode
   * Tetrominoes Per Minute display in stats page (toggle option...?)
@@ -49,6 +49,6 @@ In light of the above, I also feel I should bring up the point that some modes s
 
 ~~I believe that some single player modes should have officially supported rules. Modes that attempt to clone a particular mode should have options to use the intended rule, as well as a Custom option to use the selected rule instead. (i.e. Grade Mania 3's rule menu would sport Classic3, Standard-Hard, and Custom.)~~ (Thanks NoName.)
 
-It may also be beneficial to allow for separate default configurations with each rule. For example, Classic and Standard rules should have their appropriate torikans by default rather than share one setting.
+~~It may also be beneficial to allow for separate default configurations with each rule. For example, Classic and Standard rules should have their appropriate torikans by default rather than share one setting.~~ (Thanks NoName. Speed Mania 2 now has the torikans to match the rule in use, which was the main purpose of this feature.)
 
 At any rate, removing the authority over certain settings from the rules themselves will reduce the number of rules we need in the menu. Cutting down on rule bloat means this menu will be much less daunting, for newcomer and experienced users alike.
