@@ -18,6 +18,7 @@ User request list:
   * option for fixed location previews in the well
   * option to tone down line clear effect rather than remove it outright
   * move playfields closer together in 1v1 layout
+  * Instant left/right keys? Double left/right macro?
 
 My list:
   * TGM garbage
