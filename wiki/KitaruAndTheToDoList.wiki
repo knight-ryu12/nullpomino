@@ -14,7 +14,7 @@ User request list:
   * themes
   * higher resolutions for windowed mode
   * Tetrominoes Per Minute display in stats page (toggle option...?)
-  * bigger side previews (requires redesign of some screen layouts)
+  * ~~bigger side previews (requires redesign of some screen layouts)~~ (Thanks again to NoName!)
   * option for fixed location previews in the well
   * option to tone down line clear effect rather than remove it outright
   * move playfields closer together in 1v1 layout
