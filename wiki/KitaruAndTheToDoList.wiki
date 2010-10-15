@@ -16,7 +16,7 @@ User request list:
   * Tetrominoes Per Minute display in stats page (toggle option...?)
   * ~~bigger side previews (requires redesign of some screen layouts)~~ (Thanks again to NoName!)
   * option for fixed location previews in the well
-  * option to tone down line clear effect rather than remove it outright
+  * ~~option to tone down line clear effect rather than remove it outright~~ (NoName is picking off community requests one by one, haha. :D )
   * move playfields closer together in 1v1 layout
   * Instant left/right keys? Double left/right macro?
 
