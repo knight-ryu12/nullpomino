@@ -3598,7 +3598,6 @@ public class NetLobbyFrame extends JFrame implements ActionListener, NetMessageL
 			if(netPlayerClient.getYourPlayerInfo().seatID != -1) {
 				btnRoomButtonsSitOut.setEnabled(false);
 				btnRoomButtonsTeamChange.setEnabled(false);
-				btnRoomListTeamChange.setEnabled(false);
 				roomTopBarCardLayout.first(subpanelRoomTopBar);
 			}
 		}
@@ -3615,7 +3614,6 @@ public class NetLobbyFrame extends JFrame implements ActionListener, NetMessageL
 			if(uid == netPlayerClient.getPlayerUID()) {
 				btnRoomButtonsSitOut.setEnabled(true);
 				btnRoomButtonsTeamChange.setEnabled(true);
-				btnRoomListTeamChange.setEnabled(true);
 			}
 		}
 		// Game stats (Multiplayer)
@@ -3700,7 +3698,6 @@ public class NetLobbyFrame extends JFrame implements ActionListener, NetMessageL
 
 			btnRoomButtonsSitOut.setEnabled(true);
 			btnRoomButtonsTeamChange.setEnabled(true);
-			btnRoomListTeamChange.setEnabled(true);
 		}
 		// Rating change
 		if(message[0].equals("rating")) {

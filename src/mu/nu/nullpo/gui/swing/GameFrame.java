@@ -490,7 +490,7 @@ public class GameFrame extends JFrame implements Runnable {
 			}
 
 			// ゲームの処理を実行
-			if((NullpoMinoSwing.gameManager != null) && (NullpoMinoSwing.gameManager.mode != null)) {
+			if(NullpoMinoSwing.gameManager != null) {
 				GameKeySwing.gamekey[0].inputStatusUpdate(NullpoMinoSwing.gameManager.engine[0].ctrl);
 				NullpoMinoSwing.gameManager.updateAll();
 
@@ -498,11 +498,6 @@ public class GameFrame extends JFrame implements Runnable {
 				if(NullpoMinoSwing.gameManager.getQuitFlag()) {
 					shutdown();
 					return;
-				}
-
-				// Retry button
-				if(GameKeySwing.gamekey[0].isPushKey(GameKeySwing.BUTTON_RETRY)) {
-					NullpoMinoSwing.gameManager.mode.netplayOnRetryKey(NullpoMinoSwing.gameManager.engine[0], 0);
 				}
 			}
 

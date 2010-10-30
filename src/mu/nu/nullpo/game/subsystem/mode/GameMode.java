@@ -373,11 +373,4 @@ public interface GameMode {
 	 * @param obj Any object (Currently NetLobbyFrame)
 	 */
 	public void netplayUnload(Object obj);
-
-	/**
-	 * Called when retry key is pressed during netplay
-	 * @param engine GameEngine
-	 * @param playerID Player ID
-	 */
-	public void netplayOnRetryKey(GameEngine engine, int playerID);
 }

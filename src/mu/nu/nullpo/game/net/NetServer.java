@@ -28,22 +28,23 @@
 */
 package mu.nu.nullpo.game.net;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.SelectableChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.nio.channels.spi.SelectorProvider;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -65,18 +66,21 @@ import org.cacas.java.gnu.tools.Crypt;
 import biz.source_code.base64Coder.Base64Coder;
 
 /**
- * NullpoMino NetServer<br>
- * The code is based on <a href="http://rox-xmlrpc.sourceforge.net/niotut/">James Greenfield's The Rox Java NIO Tutorial</a>
+ * NullpoMino NetServer
+ * <a href="http://hondou.homedns.org/pukiwiki/index.php?JavaSE%20%A5%C1%A5%E3%A5%C3%A5%C8%A5%B7%A5%B9%A5%C6%A5%E0%A4%F2%BA%EE%A4%ED%A4%A6">Source</a>
  */
-public class NetServer {
+public class NetServer implements ActionListener {
+	/** serialVersionUID */
+	private static final long serialVersionUID = 1L;
+
 	/** Log */
-	static Logger log = Logger.getLogger(NetServer.class);
+	static final Logger log = Logger.getLogger(NetServer.class);
 
 	/** Default port number */
 	public static final int DEFAULT_PORT = 9200;
 
 	/** Read buffer size */
-	public static final int BUF_SIZE = 8192;
+	public static final int BUF_SIZE = 2048;
 
 	/** Rule data send buffer size */
 	public static final int RULE_BUF_SIZE = 512;
@@ -104,9 +108,6 @@ public class NetServer {
 
 	/** Properties of single player personal best */
 	private static CustomProperties propSPPersonalBest;
-
-	/** True to allow hostname display (If false, it will display IP only) */
-	private static boolean allowDNSAccess;
 
 	/** Default rating */
 	private static int ratingDefault;
@@ -141,11 +142,11 @@ public class NetServer {
 	/** Single player leaderboard list */
 	private static LinkedList<NetSPRanking> spRankingList;
 
-	/** Ban list */
-	private static LinkedList<NetServerBan> banList;
-
 	/** List of SocketChannel */
-	private LinkedList<SocketChannel> channelList = new LinkedList<SocketChannel>();
+	private List<SocketChannel> channelList = new LinkedList<SocketChannel>();
+
+	/** Send buffer */
+	private Map<SocketChannel, ByteArrayOutputStream> bufferMap = new HashMap<SocketChannel, ByteArrayOutputStream>();
 
 	/** Incomplete packet buffer */
 	private Map<SocketChannel, StringBuilder> notCompletePacketMap = new HashMap<SocketChannel, StringBuilder>();
@@ -162,6 +163,15 @@ public class NetServer {
 	/** Admin list */
 	private LinkedList<SocketChannel> adminList = new LinkedList<SocketChannel>();
 
+	/** Ban list */
+	private LinkedList<NetServerBan> banList = new LinkedList<NetServerBan>();
+
+	/** Selector */
+	private Selector selector;
+
+	/** Current port number */
+	private int port;
+
 	/** Number of players connected so far (Used for assigning player ID) */
 	private int playerCount = 0;
 
@@ -174,23 +184,108 @@ public class NetServer {
 	/** true if shutdown is requested by the admin */
 	private boolean shutdownRequested = false;
 
-	/** The port to listen on */
-	private int port;
+	/**
+	 * Main (Entry point)
+	 * @param args Command-line options
+	 */
+	public static void main(String[] args) {
+		// Init log system (should be first!)
+		PropertyConfigurator.configure("config/etc/log_server.cfg");
 
-	/** The channel on which we'll accept connections */
-	private ServerSocketChannel serverChannel;
+		// Load server config file
+		propServer = new CustomProperties();
+		try {
+			FileInputStream in = new FileInputStream("config/etc/netserver.cfg");
+			propServer.load(in);
+			in.close();
+		} catch (IOException e) {
+			log.warn("Failed to load config file", e);
+		}
 
-	/** The selector we'll be monitoring */
-	private Selector selector;
+		// Fetch port number from config file
+		int port = propServer.getProperty("netserver.port", DEFAULT_PORT);
 
-	/** The buffer into which we'll read data when it's available */
-	private ByteBuffer readBuffer;
+		if(args.length > 0) {
+			// If command-line option is used, change port number to the new one
+			try {
+				port = Integer.parseInt(args[0]);
+			} catch (NumberFormatException e) {}
+		}
 
-	/** A list of ChangeRequest instances */
-	private LinkedList<ChangeRequest> pendingChanges = new LinkedList<ChangeRequest>();
+		// Run
+		new NetServer(port).run();
+	}
 
-	/** Maps a SocketChannel to a list of ByteBuffer instances */
-	private HashMap<SocketChannel, List<ByteBuffer>> pendingData = new HashMap<SocketChannel, List<ByteBuffer>>();
+	/**
+	 * Initialize (default port)
+	 */
+	/*
+	private void init() {
+		init(DEFAULT_PORT);
+	}
+	*/
+
+	/**
+	 * Initialize
+	 */
+	private void init(int port) {
+		this.port = port;
+
+		// Load player data file
+		propPlayerData = new CustomProperties();
+		try {
+			FileInputStream in = new FileInputStream("config/setting/netserver_playerdata.cfg");
+			propPlayerData.load(in);
+			in.close();
+		} catch (IOException e) {}
+
+		// Load multiplayer leaderboard file
+		propMPRanking = new CustomProperties();
+		try {
+			FileInputStream in = new FileInputStream("config/setting/netserver_mpranking.cfg");
+			propMPRanking.load(in);
+			in.close();
+		} catch (IOException e) {}
+
+		// Load single player leaderboard file
+		propSPRanking = new CustomProperties();
+		try {
+			FileInputStream in = new FileInputStream("config/setting/netserver_spranking.cfg");
+			propSPRanking.load(in);
+			in.close();
+		} catch (IOException e) {}
+
+		// Load single player personal best
+		propSPPersonalBest = new CustomProperties();
+		try {
+			FileInputStream in = new FileInputStream("config/setting/netserver_sppersonalbest.cfg");
+			propSPPersonalBest.load(in);
+			in.close();
+		} catch (IOException e) {}
+
+		// Load settings
+		ratingDefault = propServer.getProperty("netserver.ratingDefault", NetPlayerInfo.DEFAULT_MULTIPLAYER_RATING);
+		ratingNormalMaxDiff = propServer.getProperty("netserver.ratingNormalMaxDiff", NORMAL_MAX_DIFF);
+		ratingProvisionalGames = propServer.getProperty("netserver.ratingProvisionalGames", PROVISIONAL_GAMES);
+		ratingMin = propServer.getProperty("netserver.ratingMin", 0);
+		ratingMax = propServer.getProperty("netserver.ratingMax", 99999);
+		ratingAllowSameIP = propServer.getProperty("netserver.ratingAllowSameIP", true);
+		maxMPRanking = propServer.getProperty("netserver.maxMPRanking", DEFAULT_MAX_MPRANKING);
+
+		// Load rules for rated game
+		loadRuleList();
+
+		// Load multiplayer leaderboard
+		loadMPRankingList();
+		propMPRanking.clear();	// Clear all entries in order to reduce file size
+
+		// Load single player leaderboard
+		loadSPRankingList();
+		propSPRanking.clear();	// Clear all entries in order to reduce file size
+
+		// Load ban list
+		loadBanList();
+	}
 
 	/**
 	 * Load rated-game rule list
@@ -547,429 +642,196 @@ public class NetServer {
 	}
 
 	/**
-	 * Load ban list from a file
-	 */
-	private static void loadBanList() {
-		banList = new LinkedList<NetServerBan>();
-
-		try {
-			BufferedReader txtBanList = new BufferedReader(new FileReader("config/setting/netserver_banlist.cfg"));
-
-			String str;
-			while((str = txtBanList.readLine()) != null) {
-				if(str.length() > 0) {
-					NetServerBan ban = new NetServerBan();
-					ban.importString(str);
-					if(!ban.isExpired()) banList.add(ban);
-				}
-			}
-		} catch (IOException e) {
-			log.debug("Ban list file doesn't exist");
-		} catch (Exception e) {
-			log.warn("Failed to load ban list", e);
-		}
-	}
-
-	/**
-	 * Write ban list to a file
-	 */
-	private static void saveBanList() {
-		try {
-			FileWriter outFile = new FileWriter("config/setting/netserver_banlist.cfg");
-			PrintWriter out = new PrintWriter(outFile);
-
-			for(NetServerBan ban: banList) {
-				out.println(ban.exportString());
-			}
-
-			out.flush();
-			out.close();
-
-			log.info("Ban list saved");
-		} catch (Exception e) {
-			log.error("Failed to save ban list", e);
-		}
-	}
-
-	/**
-	 * Get IP address
-	 * @param client SocketChannel
-	 * @return IP address
-	 */
-	private static String getHostAddress(SocketChannel client) {
-		try {
-			return client.socket().getInetAddress().getHostAddress();
-		} catch (Exception e) {}
-		return "";
-	}
-
-	/**
-	 * Get Hostname
-	 * @param client SocketChannel
-	 * @return Hostname
-	 */
-	private static String getHostName(SocketChannel client) {
-		if(!allowDNSAccess) return getHostAddress(client);
-		try {
-			return client.socket().getInetAddress().getHostName();
-		} catch (Exception e) {}
-		return "";
-	}
-
-	/**
-	 * Get both Hostname and IP address
-	 * @param client SocketChannel
-	 * @return Hostname and IP address
-	 */
-	private static String getHostFull(SocketChannel client) {
-		if(!allowDNSAccess) return getHostAddress(client);
-		try {
-			return getHostName(client) + " (" + getHostAddress(client) + ")";
-		} catch (Exception e) {}
-		return "";
-	}
-
-	/**
-	 * Main (Entry point)
-	 * @param args Command-line options
-	 */
-	public static void main(String[] args) {
-		// Init log system (should be first!)
-		PropertyConfigurator.configure("config/etc/log_server.cfg");
-
-		// Load server config file
-		propServer = new CustomProperties();
-		try {
-			FileInputStream in = new FileInputStream("config/etc/netserver.cfg");
-			propServer.load(in);
-			in.close();
-		} catch (IOException e) {
-			log.warn("Failed to load config file", e);
-		}
-
-		// Fetch port number from config file
-		int port = propServer.getProperty("netserver.port", DEFAULT_PORT);
-
-		if(args.length > 0) {
-			// If command-line option is used, change port number to the new one
-			try {
-				port = Integer.parseInt(args[0]);
-			} catch (NumberFormatException e) {}
-		}
-
-		// Run
-		new NetServer(port).run();
-	}
-
-	/**
-	 * Constructor
+	 * Default constructor
 	 */
 	public NetServer() {
-		init(DEFAULT_PORT);
+		this(DEFAULT_PORT);
 	}
 
 	/**
 	 * Constructor
-	 * @param port The port to listen on
+	 * @param port Port number
 	 */
 	public NetServer(int port) {
 		init(port);
 	}
 
 	/**
-	 * Initialize
-	 * @param port The port to listen on
-	 */
-	private void init(int port) {
-		this.port = port;
-
-		// Load player data file
-		propPlayerData = new CustomProperties();
-		try {
-			FileInputStream in = new FileInputStream("config/setting/netserver_playerdata.cfg");
-			propPlayerData.load(in);
-			in.close();
-		} catch (IOException e) {}
-
-		// Load multiplayer leaderboard file
-		propMPRanking = new CustomProperties();
-		try {
-			FileInputStream in = new FileInputStream("config/setting/netserver_mpranking.cfg");
-			propMPRanking.load(in);
-			in.close();
-		} catch (IOException e) {}
-
-		// Load single player leaderboard file
-		propSPRanking = new CustomProperties();
-		try {
-			FileInputStream in = new FileInputStream("config/setting/netserver_spranking.cfg");
-			propSPRanking.load(in);
-			in.close();
-		} catch (IOException e) {}
-
-		// Load single player personal best
-		propSPPersonalBest = new CustomProperties();
-		try {
-			FileInputStream in = new FileInputStream("config/setting/netserver_sppersonalbest.cfg");
-			propSPPersonalBest.load(in);
-			in.close();
-		} catch (IOException e) {}
-
-		// Load settings
-		allowDNSAccess = propServer.getProperty("netserver.allowDNSAccess", true);
-		ratingDefault = propServer.getProperty("netserver.ratingDefault", NetPlayerInfo.DEFAULT_MULTIPLAYER_RATING);
-		ratingNormalMaxDiff = propServer.getProperty("netserver.ratingNormalMaxDiff", NORMAL_MAX_DIFF);
-		ratingProvisionalGames = propServer.getProperty("netserver.ratingProvisionalGames", PROVISIONAL_GAMES);
-		ratingMin = propServer.getProperty("netserver.ratingMin", 0);
-		ratingMax = propServer.getProperty("netserver.ratingMax", 99999);
-		ratingAllowSameIP = propServer.getProperty("netserver.ratingAllowSameIP", true);
-		maxMPRanking = propServer.getProperty("netserver.maxMPRanking", DEFAULT_MAX_MPRANKING);
-
-		// Load rules for rated game
-		loadRuleList();
-
-		// Load multiplayer leaderboard
-		loadMPRankingList();
-		propMPRanking.clear();	// Clear all entries in order to reduce file size
-
-		// Load single player leaderboard
-		loadSPRankingList();
-		propSPRanking.clear();	// Clear all entries in order to reduce file size
-
-		// Load ban list
-		loadBanList();
-	}
-
-	/**
-	 * Initialize the selector
-	 * @return The selector we'll be monitoring
-	 * @throws IOException When the selector can't be created (Usually when the port is already in use)
-	 */
-	private Selector initSelector() throws IOException {
-		// Create a new selector
-		Selector socketSelector = SelectorProvider.provider().openSelector();
-
-		// Create a new non-blocking server socket channel
-		this.serverChannel = ServerSocketChannel.open();
-		serverChannel.configureBlocking(false);
-
-		// Bind the server socket to the specified address and port
-		InetSocketAddress isa = new InetSocketAddress(this.port);
-		serverChannel.socket().bind(isa);
-
-		// Register the server socket channel, indicating an interest in
-		// accepting new connections
-		serverChannel.register(socketSelector, SelectionKey.OP_ACCEPT);
-
-		return socketSelector;
-	}
-
-	/**
 	 * Server mainloop
 	 */
 	public void run() {
-		// Startup
+		ServerSocketChannel serverChannel = null;
+
 		try {
-			this.selector = initSelector();
+			log.info("Server version:" + GameManager.getVersionMajor());
+			log.info("Starting server on port " + port);
+
+			writeServerStatusFile();
+
+			selector = Selector.open();
+			serverChannel = ServerSocketChannel.open();
+			serverChannel.configureBlocking(false);
+			serverChannel.socket().bind(new InetSocketAddress(port));
+			serverChannel.register(selector, SelectionKey.OP_ACCEPT);
+
+			while((selector.select() > 0) && (!shutdownRequested)) {
+				Iterator<SelectionKey> keyIt = selector.selectedKeys().iterator();
+
+				while(keyIt.hasNext()) {
+					SelectionKey key = keyIt.next();
+					keyIt.remove();
+
+					if (key.isAcceptable()) {
+						doAccept((ServerSocketChannel) key.channel());
+					} else if (key.isReadable()) {
+						doRead((SocketChannel) key.channel());
+					} else if (key.isWritable()) {
+						doWrite((SocketChannel) key.channel());
+					}
+				}
+
+				//Thread.sleep(500);
+			}
 		} catch (IOException e) {
-			log.fatal("Failed to startup the server", e);
-			return;
-		}
-
-		// Mainloop
-		while(!shutdownRequested) {
+			log.fatal("IOException throwed on server mainloop", e);
+		} catch (Throwable e) {
+			log.fatal("Non-IOException throwed on server mainloop", e);
+		} finally {
+			log.warn("Server Shutdown!");
 			try {
-				// Process any pending changes
-				synchronized (this.pendingChanges) {
-					Iterator<ChangeRequest> changes = this.pendingChanges.iterator();
-					while (changes.hasNext()) {
-						ChangeRequest change = (ChangeRequest) changes.next();
-						switch (change.type) {
-						case ChangeRequest.CHANGEOPS:
-							SelectionKey key = change.socket.keyFor(this.selector);
-							key.interestOps(change.ops);
-						}
-					}
-					this.pendingChanges.clear();
-				}
-
-				// Wait for an event one of the registered channels
-				this.selector.select();
-
-				// Iterate over the set of keys for which events are available
-				Iterator<SelectionKey> selectedKeys = this.selector.selectedKeys().iterator();
-				while (selectedKeys.hasNext()) {
-					SelectionKey key = (SelectionKey) selectedKeys.next();
-					selectedKeys.remove();
-
-					if (!key.isValid()) {
-						continue;
-					}
-
-					try {
-						// Check what event is available and deal with it
-						if (key.isAcceptable()) {
-							doAccept(key);
-						} else if (key.isReadable()) {
-							doRead(key);
-						} else if (key.isWritable()) {
-							doWrite(key);
-						}
-					} catch (NetServerDisconnectRequestedException e) {
-						// Intended Disconnect
-						log.debug("Socket disconnected by NetServerDisconnectRequestedException");
-						logout(key);
-					} catch (IOException e) {
-						// Disconnect when something bad happens
-						log.info("Socket disconnected by IOException", e);
-						logout(key);
-					} catch (Exception e) {
-						log.warn("Socket disconnected by Non-IOException", e);
-						logout(key);
-					}
-				}
+				if(serverChannel != null) serverChannel.close();
 			} catch (IOException e) {
-				log.fatal("IOException on server mainloop", e);
-			} catch (Throwable e) {
-				log.fatal("Non-IOException throwed on server mainloop", e);
+				log.debug("IOException on shutdown", e);
 			}
 		}
-
-		log.warn("Server Shutdown!");
 	}
 
 	/**
 	 * Accept a new client
-	 * @param key SelectionKey
-	 * @throws IOException When something bad happens
+	 * @param daemonChannel ServerSocketChannel
 	 */
-	private void doAccept(SelectionKey key) throws IOException {
-		// For an accept to be pending the channel must be a server socket channel.
-		ServerSocketChannel serverSocketChannel = (ServerSocketChannel) key.channel();
+	private void doAccept(ServerSocketChannel daemonChannel) {
+		SocketChannel channel = null;
 
-		// Accept the connection and make it non-blocking
-		SocketChannel socketChannel = serverSocketChannel.accept();
-		socketChannel.configureBlocking(false);
+		try {
+			channel = daemonChannel.accept();
+			log.info("Accept: " + channel);
+			channel.configureBlocking(false);
 
-		// Register the new SocketChannel with our Selector, indicating
-		// we'd like to be notified when there's data waiting to be read
-		socketChannel.register(this.selector, SelectionKey.OP_READ);
+			channel.register(selector, SelectionKey.OP_READ);
 
-		// Check ban
-		if(checkConnectionOnBanlist(socketChannel)) {
-			throw new NetServerDisconnectRequestedException("Connection banned");
+			channelList.add(channel);
+
+			String remoteAddr = channel.socket().getRemoteSocketAddress().toString();
+			log.info("Connected: " + remoteAddr);
+
+			/*
+			for (NetServerBan b : banList) {
+				log.debug("Connection on banlist: " + b.addr);
+			}
+			*/
+
+			if (checkConnectionOnBanlist(channel)) {
+				log.warn("Connection is banned: " + remoteAddr);
+				logout(channel);
+				return;
+			}
+
+			send(channel, "welcome\t" + GameManager.getVersionMajor() + "\t" + playerInfoMap.size() + "\t" + observerList.size() + "\t" +
+				GameManager.getVersionMinor() + "\t" + GameManager.getVersionString() + "\n");
+			adminSendClientList();
+		} catch (IOException e) {
+			log.info("IOException throwed on doAccept", e);
+			logout(channel);
+		} catch (Exception e) {
+			log.warn("Non-IOException throwed on doAccept", e);
+			logout(channel);
 		}
-
-		// Add to list
-		channelList.add(socketChannel);
-		adminSendClientList();
-
-		// Send welcome message
-		send(socketChannel, "welcome\t" + GameManager.getVersionMajor() + "\t" + playerInfoMap.size() + "\t" + observerList.size() + "\t" +
-			GameManager.getVersionMinor() + "\t" + GameManager.getVersionString() + "\n");
 	}
 
 	/**
 	 * Receive message(s) from client
-	 * @param key SelectionKey
-	 * @throws IOException When something bad happens
+	 * @param channel SocketChannel
 	 */
-	private void doRead(SelectionKey key) throws IOException {
-		SocketChannel socketChannel = (SocketChannel) key.channel();
-
-		// Clear out our read buffer so it's ready for new data
-		if(this.readBuffer == null) {
-			this.readBuffer = ByteBuffer.allocate(BUF_SIZE);
-		} else {
-			this.readBuffer.clear();
-		}
-
-		// Attempt to read off the channel
-		int numRead;
+	private void doRead(SocketChannel channel) {
 		try {
-			numRead = socketChannel.read(this.readBuffer);
-		} catch (IOException e) {
-			// The remote forcibly closed the connection, cancel
-			// the selection key and close the channel.
-			throw e;
-		}
+			String remoteAddr = channel.socket().getRemoteSocketAddress().toString();
 
-		if (numRead == -1) {
-			// Remote entity shut the socket down cleanly. Do the
-			// same from our end and cancel the channel.
-			throw new NetServerDisconnectRequestedException("Connection is closed (numBytesRead is -1)");
-		}
+			ByteBuffer buf = ByteBuffer.allocate(BUF_SIZE);
 
-		// Process the packet
-		readBuffer.flip();
+			if (channel.read(buf) > 0) {
+				buf.flip();
 
-		byte[] bytes = new byte[readBuffer.limit()];
-		readBuffer.get(bytes);
+				byte[] bytes = new byte[buf.limit()];
+				buf.get(bytes);
 
-		String message = NetUtil.bytesToString(bytes);
+				log.debug("Message From:" + remoteAddr);
 
-		// Previous incomplete packet buffer (null if none are present)
-		StringBuilder notCompletePacketBuffer = notCompletePacketMap.remove(socketChannel);
+				String message = NetUtil.bytesToString(bytes);
+				log.debug(message);
 
-		// The new packet buffer
-		StringBuilder packetBuffer = new StringBuilder();
-		if(notCompletePacketBuffer != null) packetBuffer.append(notCompletePacketBuffer);
-		packetBuffer.append(message);
+				// Previous incomplete packet buffer (null if none are present)
+				StringBuilder notCompletePacketBuffer = notCompletePacketMap.remove(channel);
 
-		int index;
-		while((index = packetBuffer.indexOf("\n")) != -1) {
-			String msgNow = packetBuffer.substring(0, index);
-			processPacket(socketChannel, msgNow);
-			packetBuffer = packetBuffer.replace(0, index+1, "");
-		}
+				// The new packet buffer
+				StringBuilder packetBuffer = new StringBuilder();
+				if(notCompletePacketBuffer != null) packetBuffer.append(notCompletePacketBuffer);
+				packetBuffer.append(message);
 
-		// Place new incomplete packet buffer
-		if(packetBuffer.length() > 0) {
-			notCompletePacketMap.put(socketChannel, packetBuffer);
-		}
-	}
-
-	/**
-	 * Write message(s) to client
-	 * @param key SelectionKey
-	 * @throws IOException When something bad happens
-	 */
-	private void doWrite(SelectionKey key) throws IOException {
-		SocketChannel socketChannel = (SocketChannel) key.channel();
-
-		synchronized (this.pendingData) {
-			List<ByteBuffer> queue = (List<ByteBuffer>) this.pendingData.get(socketChannel);
-
-			// Write until there's not more data ...
-			while (!queue.isEmpty()) {
-				ByteBuffer buf = (ByteBuffer) queue.get(0);
-				socketChannel.write(buf);
-				if (buf.remaining() > 0) {
-					// ... or the socket's buffer fills up
-					break;
+				int index;
+				while((index = packetBuffer.indexOf("\n")) != -1) {
+					String msgNow = packetBuffer.substring(0, index);
+					processPacket(channel, msgNow);
+					packetBuffer = packetBuffer.replace(0, index+1, "");
 				}
-				queue.remove(0);
-			}
 
-			if (queue.isEmpty()) {
-				// We wrote away all data, so we're no longer interested
-				// in writing on this socket. Switch back to waiting for
-				// data.
-				key.interestOps(SelectionKey.OP_READ);
+				// Place new incomplete packet buffer
+				if(packetBuffer.length() > 0) {
+					notCompletePacketMap.put(channel, packetBuffer);
+				}
 			}
+		} catch (NetServerDisconnectRequestedException e) {
+			log.debug("Diconnect requested by the client");
+			logout(channel);
+		} catch (IOException e) {
+			log.debug("Socket Disconnected on doRead (IOException)", e);
+			logout(channel);
+		} catch (Exception e) {
+			log.warn("Socket Disconnected on doRead (NOT-IOException)", e);
+			logout(channel);
 		}
 	}
 
 	/**
-	 * Logout
-	 * @param key SelectionKey
+	 * When it's ready to send something
+	 * @param channel SocketChannel
 	 */
-	private void logout(SelectionKey key) {
-		key.cancel();
+	private void doWrite(SocketChannel channel) {
+		ByteArrayOutputStream bout = bufferMap.get(channel);
+		if (bout != null) {
+			log.debug("Write Channel " + channel);
+			try {
+				ByteBuffer bbuf = ByteBuffer.wrap(bout.toByteArray());
+				int size = channel.write(bbuf);
 
-		SelectableChannel ch = key.channel();
-		if(ch instanceof SocketChannel) {
-			logout((SocketChannel)ch);
+				log.debug("Send " + size + "/" + bbuf.limit());
+
+				if (bbuf.hasRemaining()) {
+					ByteArrayOutputStream rest = new ByteArrayOutputStream();
+					rest.write(bbuf.array(), bbuf.position(), bbuf.remaining());
+					bufferMap.put(channel, rest);
+					channel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
+				} else {
+					bufferMap.remove(channel);
+					channel.register(selector, SelectionKey.OP_READ);
+				}
+			} catch (IOException e) {
+				log.debug("IOException throwed on doWrite", e);
+				logout(channel);
+			} catch (Exception e) {
+				log.warn("Non-IOException throwed on doWrite", e);
+				logout(channel);
+			}
 		}
 	}
 
@@ -980,31 +842,32 @@ public class NetServer {
 	private void logout(SocketChannel channel) {
 		if(channel == null) return;
 
-		String remoteAddr = getHostFull(channel);
-		log.info("Logout: " + remoteAddr);
+		String remoteAddr = "";
+		try {
+			remoteAddr = channel.socket().getRemoteSocketAddress().toString();
+			log.info("Logout: " + remoteAddr);
+		} catch (Exception e) {}
 
 		try {
 			channel.register(selector, 0);
-		} catch (Exception e) {
-			log.debug("Exception throwed on logout (channel.register)", e);
+		} catch (IOException e) {
+			log.debug("IOException throwed on logout (channel.register)", e);
 		}
 		try {
 			channel.finishConnect();
-		} catch (Exception e) {
-			log.debug("Exception throwed on logout (channel.finishConnect)", e);
+		} catch (IOException e) {
+			log.debug("IOException throwed on logout (channel.finishConnect)", e);
 		}
 		try {
 			channel.close();
-		} catch (Exception e) {
-			log.debug("Exception throwed on logout (channel.close)", e);
+		} catch (IOException e) {
+			log.debug("IOException throwed on logout (channel.close)", e);
 		}
 
 		try {
 			channelList.remove(channel);
+			bufferMap.remove(channel);
 			notCompletePacketMap.remove(channel);
-
-			List<ByteBuffer> queue = (List<ByteBuffer>) this.pendingData.get(channel);
-			if(queue != null) queue.clear();
 
 			NetPlayerInfo pInfo = playerInfoMap.remove(channel);
 			if(pInfo != null) {
@@ -1071,12 +934,12 @@ public class NetServer {
 		log.info("Cleanup");
 
 		channelList.clear();
+		bufferMap.clear();
 		notCompletePacketMap.clear();
 		observerList.clear();
 		adminList.clear();
 		playerInfoMap.clear();
 		roomInfoList.clear();
-		this.pendingData.clear();
 
 		System.gc();
 	}
@@ -1085,44 +948,42 @@ public class NetServer {
 	 * Send a message
 	 * @param client SocketChannel
 	 * @param bytes Message to send (byte[])
+	 * @throws IOException If something fails. If this occurs, make sure to disconnect this client.
 	 */
-	public void send(SocketChannel client, byte[] bytes) {
-		synchronized (this.pendingChanges) {
-			// Indicate we want the interest ops set changed
-			this.pendingChanges.add(new ChangeRequest(client, ChangeRequest.CHANGEOPS, SelectionKey.OP_WRITE));
+	private void send(SocketChannel client, byte[] bytes) throws IOException {
+		if(client == null) throw new NullPointerException("client is null");
+		if(bytes == null) throw new NullPointerException("bytes (message to send) is null");
 
-			// And queue the data we want written
-			synchronized (this.pendingData) {
-				this.pendingData.get(client);
+		log.debug("Send: " + client);
 
-				List<ByteBuffer> queue = (List<ByteBuffer>) this.pendingData.get(client);
-				if (queue == null) {
-					queue = new ArrayList<ByteBuffer>();
-					this.pendingData.put(client, queue);
-				}
-				queue.add(ByteBuffer.wrap(bytes));
-			}
+		ByteArrayOutputStream bout = bufferMap.get(client);
+		if (bout == null) {
+			bout = new ByteArrayOutputStream();
+			bufferMap.put(client, bout);
 		}
+		bout.write(bytes);
 
-		// Finally, wake up our selecting thread so it can make the required changes
-		this.selector.wakeup();
+		client.register(selector, SelectionKey.OP_WRITE);
 	}
 
 	/**
 	 * Send a message
 	 * @param client SocketChannel
 	 * @param msg Message to send (String)
+	 * @throws IOException If something fails. If this occurs, make sure to disconnect this client.
 	 */
-	public void send(SocketChannel client, String msg)  {
+	private void send(SocketChannel client, String msg) throws IOException  {
 		send(client, NetUtil.stringToBytes(msg));
 	}
 
 	/**
 	 * Send a message
 	 * @param pInfo NetPlayerInfo
-	 * @param bytes Message to send (byte[])
+	 * @param msg Message to send (byte[])
+	 * @throws IOException If something fails. If this occurs, make sure to disconnect this client.
 	 */
-	public void send(NetPlayerInfo pInfo, byte[] bytes) {
+	@SuppressWarnings("unused")
+	private void send(NetPlayerInfo pInfo, byte[] bytes) throws IOException {
 		SocketChannel ch = getSocketChannelByPlayer(pInfo);
 		if(ch == null) return;
 		send(ch, bytes);
@@ -1132,8 +993,10 @@ public class NetServer {
 	 * Send a message
 	 * @param pInfo NetPlayerInfo
 	 * @param msg Message to send (String)
+	 * @throws IOException If something fails. If this occurs, make sure to disconnect this client.
 	 */
-	public void send(NetPlayerInfo pInfo, String msg) {
+	@SuppressWarnings("unused")
+	private void send(NetPlayerInfo pInfo, String msg) throws IOException {
 		SocketChannel ch = getSocketChannelByPlayer(pInfo);
 		if(ch == null) return;
 		send(ch, NetUtil.stringToBytes(msg));
@@ -1142,8 +1005,9 @@ public class NetServer {
 	/**
 	 * Broadcast a message to all players
 	 * @param msg Message to send (String)
+	 * @throws IOException If something fails. If this occurs, make sure to disconnect this client.
 	 */
-	public void broadcast(String msg) {
+	private void broadcast(String msg) throws IOException {
 		synchronized(channelList) {
 			for(SocketChannel ch: channelList) {
 				NetPlayerInfo p = playerInfoMap.get(ch);
@@ -1159,8 +1023,9 @@ public class NetServer {
 	 * Broadcast a message to all players in specific room
 	 * @param msg Message to send (String)
 	 * @param roomID Room ID (-1:Lobby)
+	 * @throws IOException If something fails. If this occurs, make sure to disconnect this client.
 	 */
-	public void broadcast(String msg, int roomID) {
+	private void broadcast(String msg, int roomID) throws IOException {
 		synchronized(channelList) {
 			for(SocketChannel ch: channelList) {
 				NetPlayerInfo p = playerInfoMap.get(ch);
@@ -1177,8 +1042,9 @@ public class NetServer {
 	 * @param msg Message to send (String)
 	 * @param roomID Room ID (-1:Lobby)
 	 * @param pInfo The player to avoid sending message
+	 * @throws IOException If something fails. If this occurs, make sure to disconnect this client.
 	 */
-	public void broadcast(String msg, int roomID, NetPlayerInfo pInfo) {
+	private void broadcast(String msg, int roomID, NetPlayerInfo pInfo) throws IOException {
 		synchronized(channelList) {
 			for(SocketChannel ch: channelList) {
 				NetPlayerInfo p = playerInfoMap.get(ch);
@@ -1194,7 +1060,7 @@ public class NetServer {
 	 * Broadcast a message to all observers
 	 * @param msg Message to send (String)
 	 */
-	public void broadcastObserver(String msg) {
+	private void broadcastObserver(String msg) throws IOException {
 		for(SocketChannel ch: observerList) {
 			send(ch, msg);
 		}
@@ -1203,7 +1069,7 @@ public class NetServer {
 	/**
 	 * Broadcast client count (observers and players) to everyone
 	 */
-	public void broadcastUserCountToAll() {
+	private void broadcastUserCountToAll() throws IOException {
 		String msg = "observerupdate\t" + playerInfoMap.size() + "\t" + observerList.size() + "\n";
 		broadcast(msg);
 		broadcastObserver(msg);
@@ -1213,8 +1079,9 @@ public class NetServer {
 	/**
 	 * Broadcast a message to all admins
 	 * @param msg Message to send (String)
+	 * @throws IOException If something fails
 	 */
-	public void broadcastAdmin(String msg) {
+	private void broadcastAdmin(String msg) throws IOException {
 		for(SocketChannel ch: adminList) {
 			send(ch, msg);
 		}
@@ -1225,7 +1092,7 @@ public class NetServer {
 	 * @param pInfo Player
 	 * @return SocketChannel (null if not found)
 	 */
-	public SocketChannel getSocketChannelByPlayer(NetPlayerInfo pInfo) {
+	private SocketChannel getSocketChannelByPlayer(NetPlayerInfo pInfo) {
 		synchronized(channelList) {
 			for(SocketChannel ch: channelList) {
 				NetPlayerInfo p = playerInfoMap.get(ch);
@@ -1354,23 +1221,23 @@ public class NetServer {
 			pInfo.connected = true;
 			pInfo.isTripUse = isTripUse;
 
-			pInfo.strRealHost = getHostName(client);
-			pInfo.strRealIP = getHostAddress(client);
+			pInfo.strRealHost = client.socket().getInetAddress().getHostName();
+			pInfo.strRealIP = client.socket().getInetAddress().getHostAddress();
 
 			int showhosttype = propServer.getProperty("netserver.showhosttype", 0);
 			if(showhosttype == 1) {
-				pInfo.strHost = getHostAddress(client);
+				pInfo.strHost = client.socket().getInetAddress().getHostAddress();
 			} else if(showhosttype == 2) {
-				pInfo.strHost = getHostName(client);
+				pInfo.strHost = client.socket().getInetAddress().getHostName();
 			} else if(showhosttype == 3) {
-				pInfo.strHost = Crypt.crypt(propServer.getProperty("netserver.hostsalt", "AA"), getHostAddress(client));
+				pInfo.strHost = Crypt.crypt(propServer.getProperty("netserver.hostsalt", "AA"), client.socket().getInetAddress().getHostAddress());
 
 				int maxlen = propServer.getProperty("netserver.hostcryptmax", 8);
 				if(pInfo.strHost.length() > maxlen) {
 					pInfo.strHost = pInfo.strHost.substring(pInfo.strHost.length() - maxlen);
 				}
 			} else if(showhosttype == 4) {
-				pInfo.strHost = Crypt.crypt(propServer.getProperty("netserver.hostsalt", "AA"), getHostName(client));
+				pInfo.strHost = Crypt.crypt(propServer.getProperty("netserver.hostsalt", "AA"), client.socket().getInetAddress().getHostName());
 
 				int maxlen = propServer.getProperty("netserver.hostcryptmax", 8);
 				if(pInfo.strHost.length() > maxlen) {
@@ -1386,7 +1253,7 @@ public class NetServer {
 			playerInfoMap.put(client, pInfo);
 			playerCount++;
 			send(client, "loginsuccess\t" + NetUtil.urlEncode(pInfo.strName) + "\t" + pInfo.uid + "\n");
-			log.info(pInfo.strName + " has logged in (Host:" + getHostName(client) + " Team:" + pInfo.strTeam + ")");
+			log.info(pInfo.strName + " has logged in (Host:" + client.socket().getInetAddress().getHostName() + " Team:" + pInfo.strTeam + ")");
 
 			sendRatedRuleList(client);
 			sendPlayerList(client);
@@ -2154,21 +2021,6 @@ public class NetServer {
 				}
 			}
 		}
-		// Single player mode reset
-		if(message[0].equals("reset1p")) {
-			if(pInfo != null) {
-				NetRoomInfo roomInfo = getRoomInfo(pInfo.roomID);
-				if(roomInfo != null) {
-					int seat = roomInfo.getPlayerSeatNumber(pInfo);
-
-					if(seat != -1) {
-						pInfo.resetPlayState();
-						gameFinished(roomInfo);
-						broadcast("reset1p\n", roomInfo.roomID, pInfo);
-					}
-				}
-			}
-		}
 		// Game messages (NetServer will deliver them to other players but won't modify it)
 		if(message[0].equals("game")) {
 			if(pInfo != null) {
@@ -2195,7 +2047,7 @@ public class NetServer {
 			if(adminList.contains(client)) return;
 			if(playerInfoMap.containsKey(client)) return;
 
-			String strRemoteAddr = getHostFull(client);
+			String strRemoteAddr = client.socket().getInetAddress().getHostName();
 
 			// Check version
 			float serverVer = GameManager.getVersionMajor();
@@ -2233,7 +2085,8 @@ public class NetServer {
 
 			// Login successful
 			adminList.add(client);
-			send(client, "adminloginsuccess\t" + getHostAddress(client) + "\t" + getHostName(client) + "\n");
+			InetAddress addr = client.socket().getInetAddress();
+			send(client, "adminloginsuccess\t" + addr.getHostAddress() + "\t" + addr.getHostName() + "\n");
 			adminSendClientList();
 			sendRoomList(client);
 			log.info("Admin has logged in (" + strRemoteAddr + ")");
@@ -2245,7 +2098,8 @@ public class NetServer {
 				String[] strAdminCommandArray = strAdminCommandTemp.split("\t");
 				processAdminCommand(client, strAdminCommandArray);
 			} else {
-				log.warn(getHostFull(client) + " has tried to access admin command without login");
+				String strRemoteAddr = client.socket().getInetAddress().toString();
+				log.warn(strRemoteAddr + " has tried to access admin command without login");
 				logout(client);
 				return;
 			}
@@ -2386,9 +2240,8 @@ public class NetServer {
 		}
 		// Shutdown
 		if(message[0].equals("shutdown")) {
-			log.warn("Shutdown requested by the admin (" + getHostFull(client) + ")");
+			log.warn("Shutdown requested by the admin (" + client.socket().getInetAddress().toString() + ")");
 			shutdownRequested = true;
-			this.selector.wakeup();
 		}
 		// Announce
 		if(message[0].equals("announce")) {
@@ -2433,8 +2286,8 @@ public class NetServer {
 		String strMsg = "clientlist";
 
 		for(SocketChannel ch: channelList) {
-			String strIP = getHostAddress(ch);
-			String strHost = getHostName(ch);
+			String strIP = ch.socket().getInetAddress().getHostAddress();
+			String strHost = ch.socket().getInetAddress().getHostName();
 			NetPlayerInfo pInfo = playerInfoMap.get(ch);
 
 			int type = 0;	// Type of client. 0:Not logged in
@@ -2478,7 +2331,7 @@ public class NetServer {
 	 * Send room list to specified client
 	 * @param client Client to send
 	 */
-	private void sendRoomList(SocketChannel client) {
+	private void sendRoomList(SocketChannel client) throws IOException {
 		String msg = "roomlist\t" + roomInfoList.size();
 
 		for(NetRoomInfo roomInfo: roomInfoList) {
@@ -2537,7 +2390,7 @@ public class NetServer {
 	 * Start/Stop auto start timer. It also turn-off the Ready status if there is only 1 player.
 	 * @param roomInfo The room
 	 */
-	private void autoStartTimerCheck(NetRoomInfo roomInfo) {
+	private void autoStartTimerCheck(NetRoomInfo roomInfo) throws IOException {
 		if(roomInfo.autoStartSeconds <= 0) return;
 
 		int minPlayers = (roomInfo.autoStartTNET2) ? 2 : 1;
@@ -2577,7 +2430,7 @@ public class NetServer {
 	 * @param roomInfo The room
 	 * @return true if started, false if not
 	 */
-	private boolean gameStartIfPossible(NetRoomInfo roomInfo) {
+	private boolean gameStartIfPossible(NetRoomInfo roomInfo) throws IOException {
 		if((roomInfo.getHowManyPlayersReady() == roomInfo.getNumberOfPlayerSeated()) && (roomInfo.getNumberOfPlayerSeated() >= 2)) {
 			gameStart(roomInfo);
 			return true;
@@ -2589,7 +2442,7 @@ public class NetServer {
 	 * Start a game (force start)
 	 * @param roomInfo The room
 	 */
-	private void gameStart(NetRoomInfo roomInfo) {
+	private void gameStart(NetRoomInfo roomInfo) throws IOException {
 		if(roomInfo == null) return;
 		if(roomInfo.getNumberOfPlayerSeated() <= 0) return;
 		if((roomInfo.getNumberOfPlayerSeated() <= 1) && (!roomInfo.singleplayer)) return;
@@ -2634,7 +2487,7 @@ public class NetServer {
 	 * @param roomInfo The room
 	 * @return true if finished
 	 */
-	private boolean gameFinished(NetRoomInfo roomInfo) {
+	private boolean gameFinished(NetRoomInfo roomInfo) throws IOException {
 		int startPlayers = roomInfo.startPlayers;
 		int nowPlaying = roomInfo.getHowManyPlayersPlaying();
 		boolean isTeamWin = roomInfo.isTeamWin();
@@ -2672,7 +2525,7 @@ public class NetServer {
 					writePlayerDataToFile();
 				}
 				*/
-			} else if((winner != null) && !roomInfo.singleplayer) {
+			} else if(winner != null) {
 				// Winner is a player
 				roomInfo.playerSeatDead.addFirst(winner);
 
@@ -2747,7 +2600,7 @@ public class NetServer {
 	 * Broadcast a room update information (command will be "roomupdate")
 	 * @param roomInfo The room
 	 */
-	private void broadcastRoomInfoUpdate(NetRoomInfo roomInfo) {
+	private void broadcastRoomInfoUpdate(NetRoomInfo roomInfo) throws IOException {
 		broadcastRoomInfoUpdate(roomInfo, "roomupdate");
 	}
 
@@ -2756,7 +2609,7 @@ public class NetServer {
 	 * @param roomInfo The room
 	 * @param command Command
 	 */
-	private void broadcastRoomInfoUpdate(NetRoomInfo roomInfo, String command) {
+	private void broadcastRoomInfoUpdate(NetRoomInfo roomInfo, String command) throws IOException {
 		roomInfo.updatePlayerCount();
 		String msg = command + "\t";
 		msg += roomInfo.exportString();
@@ -2769,7 +2622,7 @@ public class NetServer {
 	 * Send player list to specified client
 	 * @param client Client to send
 	 */
-	private void sendPlayerList(SocketChannel client) {
+	private void sendPlayerList(SocketChannel client) throws IOException {
 		String msg = "playerlist\t" + playerInfoMap.size();
 
 		for(SocketChannel ch: channelList) {
@@ -2789,7 +2642,7 @@ public class NetServer {
 	 * Broadcast a player update information (command will be "playerupdate")
 	 * @param pInfo The player
 	 */
-	private void broadcastPlayerInfoUpdate(NetPlayerInfo pInfo) {
+	private void broadcastPlayerInfoUpdate(NetPlayerInfo pInfo) throws IOException {
 		broadcastPlayerInfoUpdate(pInfo, "playerupdate");
 	}
 
@@ -2798,7 +2651,7 @@ public class NetServer {
 	 * @param pInfo The player
 	 * @param command Command
 	 */
-	private void broadcastPlayerInfoUpdate(NetPlayerInfo pInfo, String command) {
+	private void broadcastPlayerInfoUpdate(NetPlayerInfo pInfo, String command) throws IOException {
 		String msg = command + "\t";
 		msg += pInfo.exportString();
 		msg += "\n";
@@ -2840,7 +2693,7 @@ public class NetServer {
 	 * @param roomInfo The room
 	 * @return Number of players moved to the game seat
 	 */
-	private int joinAllQueuePlayers(NetRoomInfo roomInfo) {
+	private int joinAllQueuePlayers(NetRoomInfo roomInfo) throws IOException {
 		int playerJoinedCount = 0;
 
 		while(roomInfo.canJoinSeat() && !roomInfo.playerQueue.isEmpty()) {
@@ -2863,7 +2716,7 @@ public class NetServer {
 	 * Signal player-dead
 	 * @param pInfo Player
 	 */
-	private void playerDead(NetPlayerInfo pInfo) {
+	private void playerDead(NetPlayerInfo pInfo) throws IOException {
 		playerDead(pInfo, null);
 	}
 
@@ -2872,7 +2725,7 @@ public class NetServer {
 	 * @param pInfo Player
 	 * @param pKOInfo Assailant (can be null)
 	 */
-	private void playerDead(NetPlayerInfo pInfo, NetPlayerInfo pKOInfo) {
+	private void playerDead(NetPlayerInfo pInfo, NetPlayerInfo pKOInfo) throws IOException {
 		NetRoomInfo roomInfo = getRoomInfo(pInfo.roomID);
 
 		if((roomInfo != null) && (pInfo.seatID != -1) && (pInfo.playing) && (roomInfo.playing)) {
@@ -2906,7 +2759,7 @@ public class NetServer {
 		LinkedList<SocketChannel> banChannels = new LinkedList<SocketChannel>();
 
 		for(SocketChannel ch: channelList) {
-			String ip = getHostAddress(ch);
+			String ip = ch.socket().getInetAddress().getHostAddress();
 			if(ip.equals(strIP)) {
 				banChannels.add(ch);
 			}
@@ -2929,7 +2782,7 @@ public class NetServer {
 	 * @return Number of players kicked (always 1 in this routine)
 	 */
 	private int ban(SocketChannel client, int banLength) {
-		String remoteAddr = getHostAddress(client);
+		String remoteAddr = client.socket().getInetAddress().getHostAddress();
 
 		if(banLength < 0) {
 			log.info("Kicked player: "+remoteAddr);
@@ -2943,13 +2796,56 @@ public class NetServer {
 	}
 
 	/**
+	 * Write ban list to a file
+	 */
+	private void saveBanList() {
+		try {
+			FileWriter outFile = new FileWriter("config/setting/netserver_banlist.cfg");
+			PrintWriter out = new PrintWriter(outFile);
+
+			for(NetServerBan ban: banList) {
+				out.println(ban.exportString());
+			}
+
+			out.flush();
+			out.close();
+
+			log.info("Ban list saved");
+		} catch (Exception e) {
+			log.error("Failed to save ban list", e);
+		}
+	}
+
+	/**
+	 * Load ban list from a file
+	 */
+	private void loadBanList() {
+		try {
+			BufferedReader txtBanList = new BufferedReader(new FileReader("config/setting/netserver_banlist.cfg"));
+
+			String str;
+			while((str = txtBanList.readLine()) != null) {
+				if(str.length() > 0) {
+					NetServerBan ban = new NetServerBan();
+					ban.importString(str);
+					if(!ban.isExpired()) banList.add(ban);
+				}
+			}
+		} catch (IOException e) {
+			log.debug("Ban list file doesn't exist");
+		} catch (Exception e) {
+			log.warn("Failed to load ban list", e);
+		}
+	}
+
+	/**
 	 * Checks whether a connection is banned.
 	 * @param client The remote address to check.
 	 * @return true if the connection is banned, false if it is not banned or if the ban
 	 * is expired.
 	 */
 	private boolean checkConnectionOnBanlist(SocketChannel client) {
-		String remoteAddr = getHostAddress(client);
+		String remoteAddr = client.socket().getInetAddress().getHostAddress();
 
 		Iterator<NetServerBan> i = banList.iterator();
 		NetServerBan ban;
@@ -3063,7 +2959,8 @@ public class NetServer {
 	/**
 	 * Write server-status file
 	 */
-	private void writeServerStatusFile() {
+	private void writeServerStatusFile()
+	{
 		if (!propServer.getProperty("netserver.writestatusfile", false))
 				return;
 
@@ -3086,21 +2983,8 @@ public class NetServer {
 		}
 	}
 
-	/**
-	 * Pending changes
-	 */
-	private static class ChangeRequest {
-		//public static final int REGISTER = 1;
-		public static final int CHANGEOPS = 2;
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
 
-		public SocketChannel socket;
-		public int type;
-		public int ops;
-
-		public ChangeRequest(SocketChannel socket, int type, int ops) {
-			this.socket = socket;
-			this.type = type;
-			this.ops = ops;
-		}
 	}
 }
