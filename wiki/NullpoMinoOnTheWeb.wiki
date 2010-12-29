@@ -4,3 +4,5 @@
 
 [http://megadriver.wordpress.com/2010/09/15/las-mil-caras-de-tetris-nullpomino/ Nice review of NullpoMino]
   [http://translate.google.com/translate?js=n&prev=_t&hl=en&ie=UTF-8&layout=2&eotf=1&sl=auto&tl=en&u=http%3A%2F%2Fmegadriver.wordpress.com%2F2010%2F09%2F15%2Flas-mil-caras-de-tetris-nullpomino%2F English translation]
+
+[http://www.linuxformat.ru/anons138.phtml Nullpomino onRrussian edition of Linux Format magazine DVD]
