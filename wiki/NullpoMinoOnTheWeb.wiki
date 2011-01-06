@@ -1,3 +1,5 @@
+#summary Nullpomino appearance on the Internet
+
 [http://www.happypenguin.org/show?NullpoMino NullpoMino on Linux Game Tome]
 
 [http://aur.archlinux.org/packages.php?ID=40828 NullpoMino package for Arch Linux]
