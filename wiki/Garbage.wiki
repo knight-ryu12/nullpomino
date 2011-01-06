@@ -1,0 +1,44 @@
+#summary Garbage tables.
+
+=Line clears=
+
+==T-spin only==
+|| Single || 0 ||
+|| Double || 1 ||
+|| Triple || 2 ||
+|| Four || 4 ||
+|| T-Mini-S || 1 ||
+|| T-Single || 2 ||
+|| T-Double || 4 ||
+|| T-Triple || 6 ||
+|| T-Mini-D || 4 ||
+|| EZ-T || 1 ||
+
+==ALL spin==
+|| Single || 0 ||
+|| Double || 1 ||
+|| Triple || 2 ||
+|| Four || 4 ||
+|| `*`-Mini-S || 0 ||
+|| `*`-Single || 2 ||
+|| `*`-Double || 4 ||
+|| `*`-Triple || 6 ||
+|| `*`-Mini-D || 3 ||
+|| EZ-T || 0 ||
+
+=Combo=
+
+|| 0 || 1 || 2 || 3 || 4 || 5 || 6 || 7 || 8 || 9 || 10 || 11+ ||
+|| 0 || 0 || 1 || 1 || 2 || 2 || 3 || 3 || 4 || 4 || 4 || 5 ||
+
+=Back to back=
+
+==T-spin only==
+2 if T-Triple, 1 otherwise
+
+==All spin==
+1
+
+=All Clear=
+6
+
