@@ -10,17 +10,16 @@ I'm doing this because I have ADD and I'm constantly changing what I'm focusing 
 
   * Enhancements to Netplay
     * Customizable garbage tables
-    * Netplay type presets (i.e., !NullpoMino, Blockbox, TOJ, etc)
+    * <s>Netplay type presets (i.e., !NullpoMino, Blockbox, TOJ, etc)</s> Added in new Rated system
     * Not so important, but the "targeting" system found in guideline games (for completeness, not because it's useful)
   * Accounts and password storing
-  * Increasing the number of 1P modes on Netplay
+  * <s>Increasing the number of 1P modes on Netplay</s> On hiatus until rule locking for modes is implemented
 
 == Features for future versions ==
 
   * MISSION MANIA and HANABI ATTACK modes
   * Rework GEM MANIA to move more information from hardcoding to the map definitions, such as number of normal and EX stages, etc.
-  * Moving more modes to netplay
-  * AVALANCHE, PHYSICIAN, SPF-type VS on netplay and the ability to select more VS modes
+  * <s>AVALANCHE, PHYSICIAN, SPF-type VS on netplay and the ability to select more VS modes</s> This is probably going to be taken over by Poochy
     * Different room setup options depending on the mode (this will be a doozy)
 
 == Long-term projects ==
@@ -32,6 +31,6 @@ I'm doing this because I have ADD and I'm constantly changing what I'm focusing 
 
 In all, I think the best way to move forward now is to make the UI more user-friendly such that people who are new to the scene will be able to move through it relatively pain-free. Right now, the major complaint against !NullpoMino is not the lack of features, as it is the most feature-complete of any clone out there right now, but the fact that people don't really know what they're doing. A !NullpoMino Guide has combated this somewhat, but the problem still remains that there are a lot of options that go unused and this is unnecessary.
 
-To this end, I'd started the discussion on UI updates for !NullpoMino, and I hope we can roll out and entirely new and much more intuitive interface by NM8.
+To this end, I'd started the discussion on UI updates for !NullpoMino, and I hope we can roll out and entirely new and much more intuitive interface by NM8. Currently, the netplay interface has been improved to the point where rated netplay is a lot more fun and easy that it formerly was. This is great. We should keep moving in this direction.
 
 I'd also like to focus on making things more modular in general, in order to solve problems like the speed curve import problem (see KitaruAndTheToDoList).
