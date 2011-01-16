@@ -21,6 +21,8 @@ Please strike an item off the list (not delete the text), when it's done. Or bet
 
   * (_medium_) add score counter in the game window (mainly for streaming), also for teams: http://code.google.com/p/nullpomino/issues/detail?id=47
 
+  * (_medium_) spectator view does not zoom, when joining 1on1 game in progress, only minor to some extent, but can be bad for streaming, since you potentionally have to wait out a long game, before the view changes: http://code.google.com/p/nullpomino/issues/detail?id=44
+
   * (_low_) spectate mode with 3 and 4 big fields for better streaming (6 player view felt kind of small for 3-4 players, the last time I streamed), also see: http://groups.google.com/group/nullpomino-dev/browse_thread/thread/dd5998787a76daa6 (Type B)
 
   * (_low_) add / find / create new icon for the .exe (contest running, any interested users there? could also live without a new one probably)
