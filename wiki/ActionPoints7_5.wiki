@@ -1,4 +1,6 @@
+#summary Action Point List for official 7.5 Release
 #labels Phase-Requirements
+
 This page should contain all problems / issues and tuning that still needs fixing (possibly also some new little features) for the official 7.5 release.
 
 The Issue list (bug tracker) could actually also fill this role, but I feel that this page here could be cleaner and easier for a fast overview, to just see "what needs to be done until release".
