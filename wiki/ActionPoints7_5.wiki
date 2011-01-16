@@ -1,0 +1,21 @@
+This page should contain all problems / issues and tuning that still needs fixing (possibly also some new little features) for the official 7.5 release.
+
+The Issue list (bug tracker) could actually also fill this role, but I feel that this page here could be cleaner and easier for a fast overview, to just see "what needs to be done untill release". Please give also the priority you think the issue has. The list should not only contain actual problems that need resolving, but also just "stuff that needs to be done", so it does not get forgotten (such as the installer).
+
+Please strike an item off the list (not delete the text), when it's done.
+
+==Open Action Points for 7.5 Release:==
+
+  * (_high_) NetServer: LinkedList FATAL Error: http://code.google.com/p/nullpomino/issues/detail?id=55
+
+  * (_high_) resolve issue of netplay buttons / menu bar, etc. - we need a good solution there that looks fine, but more importantly is really user friendly. also see: http://code.google.com/p/nullpomino/issues/detail?id=43
+
+  * (_high_) clean base directory, structure should be (for windows install): only .exe, data dir, config dir, nothing else. The config dir should only contain all user configs, allowing easy replacement. (atm config/setting/)
+
+  * (_high_) create nullsoft installer for windows release (incl. automatic desktop shortcut to the .exe), this was discussed on IRC, also allows manual extraction of the zipped content: http://nsis.sourceforge.net/
+
+  * (_medium_) add score counter in the game window (mainly for streaming), also for teams: http://code.google.com/p/nullpomino/issues/detail?id=47
+
+  * (_low_) spectate mode with 3 and 4 big fields for better streaming (6 player view felt kind of small for 3-4 players, the last time I streamed), also see: http://groups.google.com/group/nullpomino-dev/browse_thread/thread/dd5998787a76daa6 (Type B)
+
+  * (_low_) add / find / create new icon for the .exe (contest running, any interested users there? could also live without a new one probably)
