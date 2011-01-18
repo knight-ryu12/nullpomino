@@ -11,7 +11,7 @@ Please strike an item off the list (not delete the text), when it's done. Or bet
 
 ==Open Action Points for 7.5 Release:==
 
-  * (_high_) NetServer: LinkedList FATAL Error: http://code.google.com/p/nullpomino/issues/detail?id=55
+-
 
 ==Optional Action Points for 7.5 Release:==
 
@@ -30,3 +30,5 @@ Please strike an item off the list (not delete the text), when it's done. Or bet
   * (_high_) create nullsoft installer for windows release (incl. automatic desktop shortcut to the .exe), this was discussed on IRC, also allows manual extraction of the zipped content: http://nsis.sourceforge.net/ ; also, for more discussion see: http://groups.google.com/group/nullpomino-dev/t/5d98e1950d211f7e
 
   * (_medium_) spectator view does not zoom, when joining 1on1 game in progress, only minor to some extent, but can be bad for streaming, since you potentionally have to wait out a long game, before the view changes: http://code.google.com/p/nullpomino/issues/detail?id=44
+
+  * [NEEDS VERIFICATION] (_high_) NetServer: LinkedList FATAL Error: http://code.google.com/p/nullpomino/issues/detail?id=55
