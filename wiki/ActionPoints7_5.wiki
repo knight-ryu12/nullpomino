@@ -17,14 +17,14 @@ Please strike an item off the list (not delete the text), when it's done. Or bet
 
   * (_high_) clean base directory, structure should be (for windows install): only .exe, readme, game dir, settings dir, replays dir, nothing else. The settings dir should only contain all user configs, allowing easy replacement, when upgrading / patching the game. (atm config/setting/)
 
-  * (_high_) create nullsoft installer for windows release (incl. automatic desktop shortcut to the .exe), this was discussed on IRC, also allows manual extraction of the zipped content: http://nsis.sourceforge.net/ ; also, for more discussion see: http://groups.google.com/group/nullpomino-dev/t/5d98e1950d211f7e
-
   * (_medium_) add score counter in the game window (mainly for streaming), also for teams: http://code.google.com/p/nullpomino/issues/detail?id=47
-
-  * (_medium_) spectator view does not zoom, when joining 1on1 game in progress, only minor to some extent, but can be bad for streaming, since you potentionally have to wait out a long game, before the view changes: http://code.google.com/p/nullpomino/issues/detail?id=44
 
   * (_low_) spectate mode with 3 and 4 big fields for better streaming (6 player view felt kind of small for 3-4 players, the last time I streamed), also see: http://groups.google.com/group/nullpomino-dev/browse_thread/thread/dd5998787a76daa6 (Type B)
 
   * (_low_) add / find / create new icon for the .exe (contest running, any interested users there? could also live without a new one probably)
 
 ==Closed Points for 7.5 Release:==
+
+  * (_high_) create nullsoft installer for windows release (incl. automatic desktop shortcut to the .exe), this was discussed on IRC, also allows manual extraction of the zipped content: http://nsis.sourceforge.net/ ; also, for more discussion see: http://groups.google.com/group/nullpomino-dev/t/5d98e1950d211f7e
+
+  * (_medium_) spectator view does not zoom, when joining 1on1 game in progress, only minor to some extent, but can be bad for streaming, since you potentionally have to wait out a long game, before the view changes: http://code.google.com/p/nullpomino/issues/detail?id=44
