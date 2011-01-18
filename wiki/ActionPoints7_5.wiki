@@ -13,6 +13,8 @@ Please strike an item off the list (not delete the text), when it's done. Or bet
 
   * (_high_) NetServer: LinkedList FATAL Error: http://code.google.com/p/nullpomino/issues/detail?id=55
 
+==Optional Action Points for 7.5 Release:==
+
   * (_high_) resolve issue of netplay buttons / menu bar, etc. - we need a good solution there that looks fine, but more importantly is really user friendly. also see: http://code.google.com/p/nullpomino/issues/detail?id=43
 
   * (_high_) clean base directory, structure should be (for windows install): only .exe, readme, game dir, settings dir, replays dir, nothing else. The settings dir should only contain all user configs, allowing easy replacement, when upgrading / patching the game. (atm config/setting/)
