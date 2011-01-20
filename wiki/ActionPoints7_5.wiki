@@ -11,9 +11,11 @@ Please strike an item off the list (not delete the text), when it's done. Or bet
 
 ==Open Action Points for 7.5 Release:==
 
-  * (_high_) updated readme for 7.5, also in japanese
+  * (_high_) japanese readme for 7.5
 
 ==Optional Action Points for 7.5 Release:==
+
+  * FAILED VERIFICATION (_high_) NetServer: LinkedList FATAL Error: issue #55
 
   * (_high_) resolve issue of netplay buttons / menu bar, etc. - we need a good solution there that looks fine, but more importantly is really user friendly. also see: issue #43
 
@@ -31,6 +33,6 @@ Please strike an item off the list (not delete the text), when it's done. Or bet
 
   * (_medium_) spectator view does not zoom, when joining 1on1 game in progress, only minor to some extent, but can be bad for streaming, since you potentionally have to wait out a long game, before the view changes: issue #44
 
-  * NEEDS VERIFICATION (_high_) NetServer: LinkedList FATAL Error: issue #55
-
   * (_high_) false negatives for OpenGL Detection (issue #57), suggested fix: remove code
+
+  * (_high_) english readme for 7.5
