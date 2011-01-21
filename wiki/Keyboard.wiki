@@ -1,4 +1,4 @@
-#keyboard map
+#summary Keyboard map/reference
 
 = Blockbox (default) =
 
