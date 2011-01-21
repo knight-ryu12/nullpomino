@@ -13,19 +13,11 @@ Please strike an item off the list (not delete the text), when it's done. Or bet
 
   * (_high_) japanese readme for 7.5
 
-==Optional Action Points for 7.5 Release:==
+  * (_high_) add new .ico files that have been created to .exe
+
+==Optional Points for 7.5 Release:==
 
   * FAILED VERIFICATION (_high_) NetServer: LinkedList FATAL Error: issue #55
-
-  * (_high_) resolve issue of netplay buttons / menu bar, etc. - we need a good solution there that looks fine, but more importantly is really user friendly. also see: issue #43
-
-  * (_high_) clean base directory, structure should be (for windows install): only .exe, readme, game dir, settings dir, replays dir, nothing else. The settings dir should only contain all user configs, allowing easy replacement, when upgrading / patching the game. (atm config/setting/)
-
-  * (_medium_) add score counter in the game window (mainly for streaming), also for teams: issue #47
-
-  * (_low_) spectate mode with 3 and 4 big fields for better streaming (6 player view felt kind of small for 3-4 players, the last time I streamed), also see: http://groups.google.com/group/nullpomino-dev/browse_thread/thread/dd5998787a76daa6 (Type B)
-
-  * (_low_) add / find / create new icon for the .exe (contest running, any interested users there? could also live without a new one probably)
 
 ==Closed Points for 7.5 Release:==
 
@@ -36,3 +28,13 @@ Please strike an item off the list (not delete the text), when it's done. Or bet
   * (_high_) false negatives for OpenGL Detection (issue #57), suggested fix: remove code
 
   * (_high_) english readme for 7.5
+
+  * (_high_) resolve issue of netplay buttons / menu bar, etc. - we need a good solution there that looks fine, but more importantly is really user friendly. also see: issue #43
+
+  * (_medium_) add score counter in the game window (mainly for streaming), also for teams: issue #47
+
+==Postponed to next release:==
+
+  * (_high_) clean base directory, structure should be (for windows install): only .exe, readme, game dir, settings dir, replays dir, nothing else. The settings dir should only contain all user configs, allowing easy replacement, when upgrading / patching the game. (atm config/setting/)
+
+  * (_low_) spectate mode with 3 and 4 big fields for better streaming (6 player view felt kind of small for 3-4 players, the last time I streamed), also see: http://groups.google.com/group/nullpomino-dev/browse_thread/thread/dd5998787a76daa6 (Type B)
