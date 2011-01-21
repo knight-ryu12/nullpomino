@@ -11,11 +11,7 @@ Please strike an item off the list (not delete the text), when it's done. Or bet
 
 ==Open Action Points for 7.5 Release:==
 
-  * (_high_) japanese readme for 7.5
-
 ==Optional Points for 7.5 Release:==
-
-  * FAILED VERIFICATION (_high_) NetServer: LinkedList FATAL Error: issue #55
 
 ==Closed Points for 7.5 Release:==
 
@@ -33,7 +29,10 @@ Please strike an item off the list (not delete the text), when it's done. Or bet
 
   * (_high_) add new .ico files that have been created to .exe
 
+  * (_high_) japanese readme for 7.5
+
 ==Postponed to next release:==
+  * FAILED VERIFICATION (_high_) NetServer: LinkedList FATAL Error: issue #55
 
   * (_high_) clean base directory, structure should be (for windows install): only .exe, readme, game dir, settings dir, replays dir, nothing else. The settings dir should only contain all user configs, allowing easy replacement, when upgrading / patching the game. (atm config/setting/)
 
