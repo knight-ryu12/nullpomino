@@ -13,8 +13,6 @@ Please strike an item off the list (not delete the text), when it's done. Or bet
 
   * (_high_) japanese readme for 7.5
 
-  * (_high_) add new .ico files that have been created to .exe
-
 ==Optional Points for 7.5 Release:==
 
   * FAILED VERIFICATION (_high_) NetServer: LinkedList FATAL Error: issue #55
@@ -32,6 +30,8 @@ Please strike an item off the list (not delete the text), when it's done. Or bet
   * (_high_) resolve issue of netplay buttons / menu bar, etc. - we need a good solution there that looks fine, but more importantly is really user friendly. also see: issue #43
 
   * (_medium_) add score counter in the game window (mainly for streaming), also for teams: issue #47
+
+  * (_high_) add new .ico files that have been created to .exe
 
 ==Postponed to next release:==
 
