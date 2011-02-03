@@ -8,7 +8,7 @@
 || *Triple* || 2 || 2 ||
 || *Four* || 4 || 4 ||
 || *Spin Mini Single* || 1 || 0 ||
-|| *Spin Singe* || 2 || 2 ||
+|| *Spin Single* || 2 || 2 ||
 || *Spin Double* || 4 || 4 ||
 || *Spin Triple* || 6 || 6 ||
 || *Spin Mini Double* || 4 || 3 ||
