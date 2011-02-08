@@ -1,4 +1,4 @@
-# settings for current rooms, tournament rooms, suggested rooms
+#summary settings for current rooms, tournament rooms, suggested rooms
 
 == Legend ==
 {{{
