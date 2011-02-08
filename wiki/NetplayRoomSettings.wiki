@@ -10,14 +10,14 @@
 
 = Default rooms =
 || Game                       || *TOJ* || *Blockbox* || *All-Spins* ||
-|| *Bonus Options*            ||
+|| Bonus Options              ||
 || Spin bonus                 || T-Spin || Disabled || All-Spins ||
 || Spin type                  || 4-Point || - || Immobile ||
 || EZ                         || - || - || ✓ ||
 || B2B                        || ✓ || ✓ || ✓ ||
 || Combo                      || ✓ || ✗ || ✓ ||
 || All Clear                  || ✓ || ✗ || ✓ ||
-|| *Garbage Options*          ||
+|| Garbage Options            ||
 || Garbage change percent     || 100% || 100% || 100% ||
 || Change garbage per attack  || ✓ || ✗ || ✓ ||
 || Divide hole change rate    || ✓ || ✗ || ✓ ||
@@ -29,15 +29,15 @@
 
  
 = Current tournament rooms =
-|| Game                       || Type A || Type B || Type C || Type D || Type E || 2v2 ||
-|| *Bonus Options*            ||
+|| Game                       || *Type A* || *Type B* || *Type C* || *Type D* || *Type E* || *2v2* ||
+|| Bonus Options              ||
 || Spin bonus                 || T-Spin || All-Spins || Disabled || Disabled || Disabled || All-Spins ||
 || Spin type                  || 4-Point|| Immobile || - || - || - || Immobile ||
 || EZ                         || - || ✓ || - || - || - || ✓ ||
 || B2B                        || ✓ || ✓ || ✗ || ✓ || - || ✓ ||
 || Combo                      || ✓ || ✗ || ✓ || ✗ || ✗ || ✓ ||
 || All Clear                  || ✓ || ✓ || ✗ || ✗ || ✗ || ✓ ||
-|| *Garbage Options*          ||
+|| Garbage Options            ||
 || Garbage change percent     || 100% || 100% || 100% || 100% || 100% || 100% ||
 || Change garbage per attack  || ✓ || ✓ || ✓ || ✗ || ✗ || ✓ ||
 || Divide hole change rate    || - || - || - || - || - || ✗? ||
@@ -57,14 +57,14 @@ NullpoMino Tetris League uses the default TOJ settings (see above).
  
 === Spin Modes ===
 || Game                       || *T-Spin 2P* || *T-Spin 6P* || *T-Spin 6P Fast* || *All-Spins 2P* || *All-Spins 6P* || *All-Spins 6P Fast* ||
-|| *Bonus Options*            ||
+|| Bonus Options              ||
 || Spin bonus                 || T-Spin || T-Spin || T-Spin || All-Spins || All-Spins || All-Spins ||
 || Spin type                  || 4-Point || 4-Point || 4-Point || Immobile || Immobile || Immobile ||
 || EZ                         || - || - || - || ✓ || ✓ || ✓ ||
 || B2B                        || ✓ || ✓ || ✓ || ✓ || ✓ || ✓ ||
 || Combo                      || ✓ || ✓ || ✓ || ✓ || ✓ || ✓ ||
 || All Clear                  || ✓ || ✓ || ✓ || ✓ || ✓ || ✓ ||
-|| *Garbage Options*          ||
+|| Garbage Options            ||
 || Garbage change percent     || 90% || 90%? || 90% || 100%? || 100%? || 100%? ||
 || Change garbage per attack  || ✓ || ✓ || ✓ || ✓ || ✓ || ✓ ||
 || Divide hole change rate    || - || ✓ || ✗ || - || ✓ || ✗ ||
@@ -79,14 +79,14 @@ NullpoMino Tetris League uses the default TOJ settings (see above).
  
 === Pure Modes ===
 || Game                       || *Pure* || *Neo-Pure* ||
-|| *Bonus Options*            ||
+|| Bonus Options              ||
 || Spin bonus                 || Disabled || Disabled ||
 || Spin type                  || - || - ||
 || EZ                         || - || - ||
 || B2B                        || ✗ || ✓? ||
 || Combo                      || ✗ || ✗ ||
 || All Clear                  || ✗ || ✗ ||
-|| *Garbage Options*          ||
+|| Garbage Options            ||
 || Garbage change percent     || 90% || 100% ||
 || Change garbage per attack  || ✗ || ✗ ||
 || Divide hole change rate    || ✗ || ✗ ||
