@@ -8,24 +8,21 @@ I'm doing this because I have ADD and I'm constantly changing what I'm focusing 
 
 == Features for the upcoming version ==
 
-  * Enhancements to Netplay
-    * Customizable garbage tables
-    * <s>Netplay type presets (i.e., !NullpoMino, Blockbox, TOJ, etc)</s> Added in new Rated system
-    * Not so important, but the "targeting" system found in guideline games (for completeness, not because it's useful)
-  * Accounts and password storing
-  * <s>Increasing the number of 1P modes on Netplay</s> On hiatus until rule locking for modes is implemented
+  * See Refactoring
+  * Accounts
+  * LWJGL renderer (perhaps introducing 3D?)
 
 == Features for future versions ==
 
   * MISSION MANIA and HANABI ATTACK modes
   * Rework GEM MANIA to move more information from hardcoding to the map definitions, such as number of normal and EX stages, etc.
-  * <s>AVALANCHE, PHYSICIAN, SPF-type VS on netplay and the ability to select more VS modes</s> This is probably going to be taken over by Poochy
-    * Different room setup options depending on the mode (this will be a doozy)
 
 == Long-term projects ==
 
   * Widget engine for the UI
   * Implementation of !PetitPrince's UI or similar, whatever is decided upon by then.
+  * NDK (NullpoMino Development Kit): a method of allowing user content to be pushed straight into NullpoMino.
+    * This is somewhat inspired by Tessellate, and it can be used in the future to provide DLC, perhaps?
 
 = The future of !NullpoMino =
 
