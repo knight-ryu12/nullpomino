@@ -1,0 +1,23 @@
+#summary List of internal changes that need doing before major feature changes are done in 7.6.
+#labels Phase-Design
+
+This is sort of an aggregate TODO list that will discuss changes to the 7.6 codebase before we go ahead with other improvements. Since we've been running at cross purposes for some time, we've got a bit of a kludge on our hands, and it needs to be dealt with.
+
+= Details =
+
+  * Directory/package structure 
+    * Trivial change: rename nu.mu to it.cx
+    * We should also hide the game data away in another level of directories to make the main folder less intimidating I think)
+  * Rendering code
+    * There is a lot of copy-pasted code here and much code between SDL and Slick is shared.
+    * This will allow easier implementation of the LWJGL renderer, which should obsolete Slick and probably SDL as well.
+  * Game engine separation
+    * Separating out the engine that runs Tetromino style from the engine that runs Avalanche style, for example.
+  * Netplay changes
+    * Garbage calculation needs to be done better. We should refactor this so it is not in the client's control anymore, which will also prevent people from cheating by editing the garbage tables, for example.
+    * The protocol should be revised, as it is very hard to extend right now. It might also be possible to compress it into a binary format to save space, but this will make it harder to debug...
+  * Rule system
+    * This needs discussion, but I think it's been agreed upon that this does need a lot of change.
+    * We also have to decide the fate of tuning settings, because we don't want to have people everything in tuning.
+
+Add what you see fit. This absolutely needs to be completed before we do anything fun.
