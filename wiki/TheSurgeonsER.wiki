@@ -8,7 +8,7 @@ I'm doing this because I have ADD and I'm constantly changing what I'm focusing 
 
 == Features for the upcoming version ==
 
-  * See Refactoring
+  * [Refactoring]
   * Accounts
   * LWJGL renderer (perhaps introducing 3D?)
 
@@ -21,7 +21,7 @@ I'm doing this because I have ADD and I'm constantly changing what I'm focusing 
 
   * Widget engine for the UI
   * Implementation of !PetitPrince's UI or similar, whatever is decided upon by then.
-  * NDK (NullpoMino Development Kit): a method of allowing user content to be pushed straight into NullpoMino.
+  * NDK (!NullpoMino Development Kit): a method of allowing user content to be pushed straight into NullpoMino.
     * This is somewhat inspired by Tessellate, and it can be used in the future to provide DLC, perhaps?
 
 = The future of !NullpoMino =
