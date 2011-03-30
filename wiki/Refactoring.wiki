@@ -19,5 +19,7 @@ This is sort of an aggregate TODO list that will discuss changes to the 7.6 code
   * Rule system
     * This needs discussion, but I think it's been agreed upon that this does need a lot of change.
     * We also have to decide the fate of tuning settings, because we don't want to have people everything in tuning.
+  * Modes
+    * About half the code in the mode package is redundant. This is an abomination which must be burned at the stake.
 
 Add what you see fit. This absolutely needs to be completed before we do anything fun.
