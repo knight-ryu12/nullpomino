@@ -8,8 +8,8 @@ I figured I should compile a running list of stuff I wanted to work on or though
 = Details =
 
 User request list:
-  * attack/line ratio on the stats page
-  * ~~make Fractional Garbage in 3P+ default~~ (Current default: Reduced)
+  * ~~attack/line ratio on the stats page~~
+  * ~~make Fractional Garbage in 3P+ default~~ ~~(Current default: Reduced)~~ (Current default: Fractional with Divide Change Rate? We're getting somewhere, I guess. Down with Target System! :p)
   * ~~option to swap roles of Up/Down without reconfiguring controls or tuning a .rul file~~
   * themes
   * ~~higher resolutions for windowed mode~~ (NoName hit this one a while go. The current implementation just scales and filters, but that works for now.)
