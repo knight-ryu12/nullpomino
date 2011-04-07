@@ -12,7 +12,7 @@ User request list:
   * ~~make Fractional Garbage in 3P+ default~~ (Current default: Reduced)
   * ~~option to swap roles of Up/Down without reconfiguring controls or tuning a .rul file~~
   * themes
-  * higher resolutions for windowed mode
+  * ~~higher resolutions for windowed mode~~ (NoName hit this one a while go. The current implementation just scales and filters, but that works for now.)
   * Tetrominoes Per Minute display in stats page (toggle option...?)
   * ~~bigger side previews (requires redesign of some screen layouts)~~ (Thanks again to NoName!)
   * option for fixed location previews in the well
@@ -34,12 +34,14 @@ My list:
   * adjustable garbage tables, hidden away in some Advanced tab
   * a similar Advanced menu for things like scoring behaviors in Score Race and Ultra?
   * eventually, speed curve import for Netplay Versus -- say, for things like Shirase Versus with TGM level up, NES Versus with its own speed curve and level up system, etc.
+      * Of that token, an abstraction of the speed curve system to consolidate some of the existing mode copy-paste. The tricky part is probably going to be deciding on a clean way to handle the progression systems of different games.
   * Versus Items?
   * varying garbage behaviors depending on type of clear (i.e. random on normals, TGM garbage on twists, etc.)
   * "Pressure" garbage -- a subsection of the garbage meter that is added gradually
   * quick rotation rule change menu for Netplay etc.
   * ~~Zero ARE, Line ARE, and Line Clear in multiplayer, Line Race, etc. by default.~~
   * rule system overhaul -- see below
+     * Once Renderer refactor is sufficiently complete, I'd like to start decoupling Tuning Options from the pool of Engine variables. From there, I'll try to prototype some rule/tuning "patching" system.
   * ~~gametype tags for rules -- Some rules should be prevented from displaying in inappropriate menus. We don't really need to see Avalanche rules in the Tetromino menu.~~ (Thanks NoName.)
 
 = My Thoughts on the Rule System =
