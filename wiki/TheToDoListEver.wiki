@@ -16,6 +16,7 @@
   * New rule system (Kitaru)
   * Revamp modes
     * Abstract speed curve
+    * Abstract scoring formulae
 
 == NEURO ==
 
