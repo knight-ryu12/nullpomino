@@ -1,0 +1,22 @@
+#summary I accidentally the whole to-do list.
+
+= Introduction =
+
+!NullpoMino 8 is a long way off. People need to do things. This is what needs to be done.
+
+= Details =
+
+== Basic UI ==
+
+  * Integrate Nifty
+  * Decide menu order and layout
+
+== Game framework ==
+
+  * New rule system
+  * Revamp modes (abstract speed curve, ...)
+
+== NEURO ==
+
+  * Integrate Nifty for plugins
+  * Create NEURO Full GUI
