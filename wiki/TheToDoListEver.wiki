@@ -13,7 +13,7 @@
 
 == Game framework ==
 
-  * New rule system
+  * New rule system (Kitaru)
   * Revamp modes
     * Abstract speed curve
 
