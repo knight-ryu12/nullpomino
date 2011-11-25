@@ -4,11 +4,13 @@
 
 !NullpoMino 8 is a long way off. People need to do things. This is what needs to be done.
 
+If you want to claim an item, stick your name next to it. These have to get done, though.
+
 = Details =
 
 == Basic UI ==
 
-  * Integrate Nifty
+  * Integrate Nifty (!NoName?)
   * Decide menu order and layout (gif)
 
 == Game framework ==
@@ -17,6 +19,7 @@
   * Revamp modes
     * Abstract speed curve
     * Abstract scoring formulae
+  * Item framework and abstract item behaviors
 
 == NEURO ==
 
@@ -25,4 +28,4 @@
 
 == Netcode ==
 
-  * Specify and implement protocol
+  * Specify and implement protocol (myndzi?, Zircean)
