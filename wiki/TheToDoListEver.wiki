@@ -9,7 +9,7 @@
 == Basic UI ==
 
   * Integrate Nifty
-  * Decide menu order and layout
+  * Decide menu order and layout (gif)
 
 == Game framework ==
 
