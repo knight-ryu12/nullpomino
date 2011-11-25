@@ -14,9 +14,14 @@
 == Game framework ==
 
   * New rule system
-  * Revamp modes (abstract speed curve, ...)
+  * Revamp modes
+    * Abstract speed curve
 
 == NEURO ==
 
-  * Integrate Nifty for plugins
-  * Create NEURO Full GUI
+  * Integrate Nifty for plugins (Zircean)
+  * Create NEURO Full GUI (Zircean)
+
+== Netcode ==
+
+  * Specify and implement protocol
