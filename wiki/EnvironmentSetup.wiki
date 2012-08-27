@@ -34,8 +34,11 @@ You should now have a java project with a lot of errors in it.
 To configure your project:
 
  * right click your project, build path -> configure build path
+http://i.imgur.com/MX1Mk.png
  * in the source tab, add the src folder as source folder if this isn't the case yet, the output folder is normally bin
+http://i.imgur.com/zxRfP.png
  * in the libraries tab, add every .jar file in the lib directory
+http://i.imgur.com/8E0OV.png
 
 = Running your project =
 
