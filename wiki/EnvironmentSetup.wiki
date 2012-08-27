@@ -23,9 +23,9 @@ To checkout a java project from SVN, first install an SVN plugin in Eclipse:
  * when you added the svn, right click and checkout as java project, that should be good
 
 To do it manually:
-* Check out the code as described here http://code.google.com/p/nullpomino/source/checkout
-* Create a new java project in Eclipse
-* import the code with file -> import or just copy paste the code in your explorer and hit refresh on your project in eclipse
+ * Check out the code as described here http://code.google.com/p/nullpomino/source/checkout
+ * Create a new java project in Eclipse
+ * import the code with file -> import or just copy paste the code in your explorer and hit refresh on your project in eclipse
 
 = Configuring your project =
 
