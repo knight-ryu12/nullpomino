@@ -45,25 +45,33 @@ http://i.imgur.com/8E0OV.png
 To run the project you:
  * click right next to the "play" button to open the dropdown menu.
  * Choose Run Configurations...
+http://i.imgur.com/6hb6P.png
  * Create a new Java Application:
   * Name: NullpoMinoSlick
   * Project: NullpoMino
   * Main class: mu.nu.nullpo.gui.slick.NullpoMinoSlick
+http://i.imgur.com/AFu6c.png
+
   * Arguments -> VM Arguments:
 
 {{{
 -Dorg.lwjgl.librarypath=/Projects/YourPath/NullPomino/data/lib -Dorg.lwjgl.opengl.Display.allowSoftwareOpenGL=false -Djava.library.path=/Projects/YourPath/NullPomino/data/lib -Xmx512m
 }}}
 
+http://i.imgur.com/AiwdB.png
+
 Change the paths according to your system and your NullpoMino directory (/Projects/... is linux/mac).
 
 = Finding errors =
 
 *To find errors while building your project* 
+
 (auto build with red icons everywhere), you can see the Errors in the Problem tab in Eclipse on the bottom. Ignore warnings as the project is full of warnings when you use a jdk > 1.5
 
 *To debug*
+
 Just put breakpoints by clicking left to the line you want to stop and run in debug mode by using the bug icon instead of the play icon
 
 *To see the log file*
+
 If you want to see the log file for diagnostic info you can find it in the /logs directory. For problems with slick you can look at the slick_log.txt
