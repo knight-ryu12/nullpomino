@@ -14,7 +14,7 @@ Version that works in browser, also adds bastet-like modes.
 
 link: http://www.zeromeaner.org/
 
-== Tetris Touhou Edition ==
+== TouhouMino ==
 
 Touhou marathon challenge.
 
